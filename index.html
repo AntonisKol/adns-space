@@ -72,7 +72,15 @@
     section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 24px 24px 18px; }
     section.install h2 { margin: 0 0 4px; font-size: 14px; }
     section.install p { margin: 0 0 14px; color: #c9cdd6; font-size: 15px; }
-    section.support { margin-top: 14px; }
+    section.support, section.notes { margin-top: 14px; }
+    .notes-scroll { max-height: 240px; overflow-y: auto; padding-right: 8px; }
+    .notes-scroll::-webkit-scrollbar { width: 8px; }
+    .notes-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border-radius: 4px; }
+    .notes-scroll h3 { margin: 14px 0 6px; font-size: 13px; font-weight: 500; color: var(--ink); }
+    .notes-scroll h3:first-child { margin-top: 0; }
+    .notes-scroll ul { list-style: none; margin: 0; padding: 0; }
+    .notes-scroll li { margin: 0 0 5px; font-size: 14px; line-height: 1.45; color: #c9cdd6; }
+    .cat { display: inline-block; min-width: 4.8em; margin-right: 8px; color: var(--accent); font: 500 10px/1 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
     .paypal { display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: 1px solid var(--accent); border-radius: 3px; color: var(--accent); text-decoration: none;
       font: 700 13px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; }
     .paypal svg { color: #ff6b8a; }
@@ -136,6 +144,48 @@
         <li>Enter your Mac password if asked. That opens the copy in Applications. macOS asks again if you open the app from the disk image, or if you download a new copy.</li>
       </ol>
       <p><b>Updates:</b> versions 1.2 and later tell you when a new version is out and can install it. Your saved takes are kept. macOS can still ask you to allow the new version.</p>
+    </section>
+
+    <section class="install notes" id="notes">
+      <h2 class="mono">Release notes</h2>
+      <div class="notes-scroll">
+        <h3 class="mono">1.3.1</h3>
+        <ul>
+          <li><span class="cat">Feature</span> The green window button enters full screen and returns to the fixed size. Close and minimize still work.</li>
+          <li><span class="cat">Fix</span> A no-drag area keeps the window buttons clickable.</li>
+          <li><span class="cat">Feature</span> Releases in the top bar opens the download page.</li>
+          <li><span class="cat">Feature</span> Each take has a waveform you can click to play from that point.</li>
+          <li><span class="cat">Feature</span> Feedback opens an email.</li>
+          <li><span class="cat">Feature</span> The app checks for an update when you come back to it.</li>
+          <li><span class="cat">Change</span> The drag cursor is smaller.</li>
+          <li><span class="cat">Change</span> Takes sit one per row, and the saved count is gone.</li>
+        </ul>
+        <h3 class="mono">1.3.0</h3>
+        <ul>
+          <li><span class="cat">Feature</span> Slide across sequencer steps to switch them. Clear Steps and Clear Locks ask first and work separately.</li>
+          <li><span class="cat">Change</span> The Mac window is a fixed 1400 × 700 and cannot be resized.</li>
+          <li><span class="cat">Feature</span> Knobs, BPM and steps use a drag cursor with the app logo.</li>
+          <li><span class="cat">Feature</span> An already-open app looks for an update every 10 minutes and notifies even when its window is in front.</li>
+          <li><span class="cat">Fix</span> Update checks use the renamed public download page, so a new version can be found.</li>
+        </ul>
+        <h3 class="mono">1.2.0</h3>
+        <ul>
+          <li><span class="cat">Fix</span> After the first Open Anyway, the copy in Applications drops the download mark. Opening it from the disk image asks again, and so does a newly downloaded copy.</li>
+          <li><span class="cat">Feature</span> The app fills the window, with no black bars, and scales down to fit a small one.</li>
+          <li><span class="cat">Change</span> The window buttons sit in the top bar, which you drag the window by.</li>
+          <li><span class="cat">Feature</span> The app checks for a new version and can install it. macOS can still ask you to allow the new version. Saved takes are kept.</li>
+          <li><span class="cat">Feature</span> Support in the top bar opens PayPal.</li>
+          <li><span class="cat">Change</span> Export WAV is gone from the top bar. Each take has its own download.</li>
+          <li><span class="cat">Change</span> Six takes show at once in two columns, beside a fixed-width waveform.</li>
+          <li><span class="cat">Change</span> Clearer sample length, a smaller output meter with a limiter light, and an LFO hint that fits.</li>
+          <li><span class="cat">Fix</span> The top bar shows the real version.</li>
+        </ul>
+        <h3 class="mono">1.1</h3>
+        <ul>
+          <li><span class="cat">Feature</span> The Mac app is available to download. It works on macOS 13 or later.</li>
+          <li><span class="cat">Fix</span> Export WAV keeps the audio until the Save dialog is done.</li>
+        </ul>
+      </div>
     </section>
 
     <section class="install support" id="support">

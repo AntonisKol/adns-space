@@ -72,6 +72,11 @@
     section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 24px 24px 18px; }
     section.install h2 { margin: 0 0 4px; font-size: 14px; }
     section.install p { margin: 0 0 14px; color: #c9cdd6; font-size: 15px; }
+    section.support { margin-top: 14px; }
+    .mail { color: var(--ink); font-family: 'JetBrains Mono', ui-monospace, monospace; font-weight: 500; }
+    .copy { padding: 9px 16px; border: 1px solid var(--accent); border-radius: 3px; background: transparent; color: var(--accent); cursor: pointer;
+      font: 700 12px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; }
+    .copy:hover { background: rgba(215,255,58,.08); }
     ol { margin: 0 0 8px; padding-left: 22px; }
     li { margin: 0 0 8px; }
     li b { color: var(--ink); }
@@ -130,7 +135,13 @@
         <li>Open <b>System Settings → Privacy &amp; Security</b>, scroll to <b>Security</b> and click <b>Open Anyway</b> next to ADNS SPACE.</li>
         <li>Enter your Mac password if asked. From then on it opens normally.</li>
       </ol>
-      <p>To update, download the new version and replace the app in Applications. Your saved takes are kept.</p>
+      <p><b>Updates:</b> versions 1.2 and later tell you when a new version is out and install it themselves, without asking you to allow it again. Your saved takes are kept.</p>
+    </section>
+
+    <section class="install support" id="support">
+      <h2 class="mono">Support</h2>
+      <p>ADNS SPACE is free. If you enjoy it, you can send any amount with PayPal to <b class="mail">antonisk@gmx.net</b>.</p>
+      <button type="button" class="copy" id="copy">Copy email</button>
     </section>
 
     <footer>
@@ -141,6 +152,15 @@
   </main>
 
   <script>
+    document.getElementById('copy').addEventListener('click', async (e) => {
+      try {
+        await navigator.clipboard.writeText('antonisk@gmx.net');
+        e.target.textContent = 'Copied';
+      } catch {
+        e.target.textContent = 'antonisk@gmx.net';
+      }
+    });
+
     // Point the button at the newest release's .dmg (pre-releases count too).
     (async () => {
       const button = document.getElementById('download');

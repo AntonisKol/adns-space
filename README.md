@@ -29,7 +29,13 @@ From then on it opens normally.
 
 ## Updating
 
-Download the newest `.dmg` from the link above and drag it into Applications again, choosing **Replace**. Your saved takes are kept.
+Versions 1.2 and later tell you when a new version is out and install it themselves: click **Update**, then **Restart now**. Updates installed this way open without asking you to allow them again.
+
+On older versions, download the newest `.dmg` from the link above and drag it into Applications, choosing **Replace**. Your saved takes are kept either way.
+
+## Support
+
+ADNS SPACE is free. If you enjoy it, you can send any amount with PayPal to **antonisk@gmx.net**.
 
 ## Troubleshooting
 

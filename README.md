@@ -2,11 +2,11 @@
 
 ADNS SPACE is a one-shot sampler you play on an X-Y pad. Load a short sound, then click and drag on the pad. Left to right picks the note in your chosen key and scale, bottom to top picks the speed, and the built-in arpeggiator plays your sound in time.
 
-Shape it with seven effects: filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan. Six LFOs can move any knob, or the pad itself. A 64-step sequencer plays its own melodies and can change effect settings on each step. Record everything you play and export it as a WAV file.
+Shape it with seven effects: filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan. Six LFOs can move any knob, or the pad itself. A 64-step sequencer plays its own melodies, with parameter locks: any effect knob, or an effect's on/off, can have its own setting on each step. Record everything you play and export it as a WAV file.
 
 ## Download
 
-**[Download ADNS SPACE for Mac](https://antoniskol.github.io/adns-space/)**: the download page has the button for the newest version.
+**[Download ADNS SPACE for Mac](https://antoniskol.github.io/adns-space/)**: the download page has the button for the newest version, and the release notes for each version.
 
 It works on any Mac with **macOS 13 (Ventura) or later**.
 
@@ -32,14 +32,6 @@ That opens the copy in Applications. macOS asks again if you open the app from t
 Versions 1.2 and later tell you when a new version is out and can install it: click **Update**, then **Restart now**. Your saved takes are kept. macOS can still ask you to allow the new version.
 
 On older versions, download the newest `.dmg` from the link above and drag it into Applications, choosing **Replace**. Your saved takes are kept either way.
-
-## Release notes
-
-The [download page](https://antoniskol.github.io/adns-space/) has release notes for each version.
-
-**1.3.2:** The green window button is hidden. The window stays a fixed size. Close and minimize still work. An effect turned on for a sequencer lock plays only on that locked step. Unlocked steps and the X-Y pad stay as they were. The interface fonts are included in the app, so it looks the same without a network connection.
-
-**1.3.1:** the green window button enters full screen and returns to the fixed size. Releases in the top bar opens the download page. Each take has a waveform you can click to play from that point. Feedback opens an email. The app checks for an update when you come back to it.
 
 ## Support
 

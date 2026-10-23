@@ -8,7 +8,7 @@ Shape it with seven effects: filter, EQ, shifter, phaser-flanger, grain delay, r
 
 **[Download ADNS SPACE for Mac](https://antoniskol.github.io/adns-space-releases/)**: the download page has the button for the newest version.
 
-It works on any Mac with **macOS 13 (Ventura) or later**, both Apple Silicon (M1 and newer) and Intel.
+It works on any Mac with **macOS 13 (Ventura) or later**.
 
 ## Install
 

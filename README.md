@@ -37,7 +37,9 @@ On older versions, download the newest `.dmg` from the link above and drag it in
 
 The [download page](https://antoniskol.github.io/adns-space/) has release notes for each version.
 
-**1.3.1:** The green window button is hidden. The window stays a fixed size. Close and minimize still work. Releases in the top bar opens the download page. Each take has a waveform you can click to play from that point. Feedback opens an email. The app checks for an update when you come back to it.
+**1.3.2:** The green window button is hidden. The window stays a fixed size. Close and minimize still work. An effect turned on for a lock affects only that locked step, not unlocked steps and not the X-Y pad. Interface fonts are bundled, so the app looks the same without a network request.
+
+**1.3.1:** the green window button enters full screen and returns to the fixed size. Releases in the top bar opens the download page. Each take has a waveform you can click to play from that point. Feedback opens an email. The app checks for an update when you come back to it.
 
 ## Support
 

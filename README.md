@@ -35,7 +35,7 @@ On older versions, download the newest `.dmg` from the link above and drag it in
 
 ## Support
 
-ADNS SPACE is free. If you enjoy it, you can send any amount with PayPal to **antonisk@gmx.net**.
+ADNS SPACE is free. If you enjoy it, you can support it with any amount: **[♥ Support with PayPal](https://paypal.me/AntoniosKolovos)**.
 
 ## Troubleshooting
 

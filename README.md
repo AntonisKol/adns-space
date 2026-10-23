@@ -33,6 +33,12 @@ Versions 1.2 and later tell you when a new version is out and can install it: cl
 
 On older versions, download the newest `.dmg` from the link above and drag it into Applications, choosing **Replace**. Your saved takes are kept either way.
 
+## Release notes
+
+The [download page](https://antoniskol.github.io/adns-space/) has release notes for each version.
+
+**1.3.1:** the green window button enters full screen and returns to the fixed size. Releases in the top bar opens the download page. Each take has a waveform you can click to play from that point. Feedback opens an email. The app checks for an update when you come back to it.
+
 ## Support
 
 ADNS SPACE is free. If you enjoy it, you can support it with any amount: **[♥ Support with PayPal](https://paypal.me/AntoniosKolovos)**.

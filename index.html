@@ -1,0 +1,170 @@
+<!doctype html>
+<!--
+  Download page for ADNS SPACE (served by GitHub Pages from this repository).
+  The Download button is a plain link to the releases list, so it works without
+  JavaScript. The script asks GitHub for the newest release (pre-releases included)
+  and points the button straight at its .dmg, with version and size.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADNS SPACE for Mac</title>
+  <meta name="description" content="A one-shot sampler you play on an X-Y pad. Arpeggiator, seven effects, six LFOs, a 64-step sequencer and WAV recording. Free for Mac." />
+  <meta property="og:title" content="ADNS SPACE for Mac" />
+  <meta property="og:description" content="A one-shot sampler you play on an X-Y pad. Free for Mac." />
+  <meta property="og:image" content="https://antoniskol.github.io/adns-space-releases/assets/screenshot.jpg" />
+  <link rel="icon" href="assets/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ground: #05060b;
+      --panel: rgba(12, 14, 23, 0.82);
+      --line: rgba(255, 255, 255, 0.1);
+      --ink: #eceef2;
+      --muted: #9aa0ad;
+      --accent: #d7ff3a;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--ground); }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.5), transparent 60%),
+        radial-gradient(1px 1px at 78% 8%, rgba(255,255,255,.4), transparent 60%),
+        radial-gradient(1.5px 1.5px at 64% 42%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.3), transparent 60%),
+        radial-gradient(1px 1px at 90% 82%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(900px 500px at 50% -10%, rgba(215,255,58,.06), transparent 70%),
+        var(--ground);
+      font: 17px/1.6 'Space Grotesk', system-ui, sans-serif;
+    }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 40px; }
+    header { display: flex; align-items: center; gap: 16px; }
+    header img { width: 64px; height: 64px; }
+    h1 { margin: 0; font-size: clamp(28px, 5vw, 40px); letter-spacing: .14em; line-height: 1.1; }
+    .kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .lead { max-width: 680px; margin: 28px 0 0; font-size: clamp(18px, 2.4vw, 21px); }
+    .lead strong { color: var(--accent); font-weight: 500; }
+    .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 30px 0 0; }
+    .download {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 15px 26px; border-radius: 3px;
+      background: var(--accent); color: #05060b; text-decoration: none;
+      font: 700 15px 'JetBrains Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .download:hover { filter: brightness(1.08); }
+    .download:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .download svg { flex: none; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .meta b { color: var(--ink); font-weight: 500; }
+    figure { margin: 40px 0 0; }
+    figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+    figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 14px; margin: 44px 0 0; }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; }
+    .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); }
+    .card p { margin: 0; color: #c9cdd6; font-size: 15px; }
+    section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 24px 24px 18px; }
+    section.install h2 { margin: 0 0 4px; font-size: 14px; }
+    section.install p { margin: 0 0 14px; color: #c9cdd6; font-size: 15px; }
+    ol { margin: 0 0 8px; padding-left: 22px; }
+    li { margin: 0 0 8px; }
+    li b { color: var(--ink); }
+    footer { margin: 40px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    footer a { color: var(--muted); }
+    @media (max-width: 560px) {
+      main { padding-top: 32px; }
+      header img { width: 52px; height: 52px; }
+      .download { width: 100%; justify-content: center; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img src="assets/icon.png" alt="" width="64" height="64" />
+      <div>
+        <h1>ADNS SPACE</h1>
+        <p class="kicker mono">Sampler · arp · sequencer · for Mac</p>
+      </div>
+    </header>
+
+    <p class="lead">
+      A one-shot sampler you play on an <strong>X-Y pad</strong>. Load a short sound, then click and drag:
+      left to right picks the note in your key and scale, bottom to top picks the speed, and the
+      arpeggiator plays it in time.
+    </p>
+
+    <div class="cta">
+      <a class="download" id="download" href="https://github.com/AntonisKol/adns-space-releases/releases">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v10M4.5 7.5 9 12l4.5-4.5M2.5 15.5h13" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        Download for Mac
+      </a>
+      <span class="meta" id="meta">Free · macOS 13 or later · Apple Silicon and Intel</span>
+    </div>
+
+    <figure>
+      <img src="assets/screenshot.jpg" alt="ADNS SPACE: the X-Y pad on the left, the effects rack and LFOs on the right, the arpeggiator and 64-step sequencer along the bottom." width="2000" height="950" />
+      <figcaption>The X-Y pad, the effects rack with LFOs, and the arp and sequencer bar.</figcaption>
+    </figure>
+
+    <div class="grid">
+      <div class="card"><h3 class="mono">X-Y pad</h3><p>Pitch on one axis, arp speed on the other. Hold keeps it playing when you let go.</p></div>
+      <div class="card"><h3 class="mono">Seven effects</h3><p>Filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan.</p></div>
+      <div class="card"><h3 class="mono">Six LFOs</h3><p>Map any knob, or the pad itself, and let it move on its own.</p></div>
+      <div class="card"><h3 class="mono">64-step sequencer</h3><p>A note on every step, and effect settings that change step by step.</p></div>
+      <div class="card"><h3 class="mono">Record &amp; export</h3><p>Every take is saved with its moves. Export 24-bit WAV or re-render with a new sound.</p></div>
+    </div>
+
+    <section class="install" id="install">
+      <h2 class="mono">Install</h2>
+      <p>ADNS SPACE is free and isn't registered with Apple, so your Mac asks you to allow it the first time.</p>
+      <ol>
+        <li>Open the downloaded <b>.dmg</b> and drag <b>ADNS SPACE</b> onto <b>Applications</b>.</li>
+        <li>Open ADNS SPACE. When your Mac says it can't verify the app, click <b>Done</b>.</li>
+        <li>Open <b>System Settings → Privacy &amp; Security</b>, scroll to <b>Security</b> and click <b>Open Anyway</b> next to ADNS SPACE.</li>
+        <li>Enter your Mac password if asked. From then on it opens normally.</li>
+      </ol>
+      <p>To update, download the new version and replace the app in Applications. Your saved takes are kept.</p>
+    </section>
+
+    <footer>
+      Background in the app: Webb deep field EIGER1 — NASA, ESA, CSA, S. Lilly (ETH Zurich), D. Kashino (Nagoya University),
+      J. Matthee (ETH Zurich), C. Eilers (MIT), R. Simcoe (MIT), R. Bordoloi (MIT), R. Mackenzie (ETH Zurich), A. Pagan (STScI),
+      <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.
+    </footer>
+  </main>
+
+  <script>
+    // Point the button at the newest release's .dmg (pre-releases count too).
+    (async () => {
+      const button = document.getElementById('download');
+      const meta = document.getElementById('meta');
+      try {
+        const res = await fetch('https://api.github.com/repos/AntonisKol/adns-space-releases/releases?per_page=10', {
+          headers: { Accept: 'application/vnd.github+json' },
+        });
+        if (!res.ok) return;
+        const releases = await res.json();
+        for (const r of releases) {
+          if (r.draft) continue;
+          const dmg = (r.assets || []).find((a) => /-mac\.dmg$/.test(a.name));
+          if (!dmg) continue;
+          button.href = dmg.browser_download_url;
+          const mb = Math.round(dmg.size / 1e6);
+          const version = (r.name || r.tag_name).replace(/^ADNS SPACE\s*/, '');
+          meta.innerHTML = `Version <b>${version.replace(/[<>&]/g, '')}</b> · ${mb} MB · free · macOS 13 or later · Apple Silicon and Intel`;
+          return;
+        }
+      } catch {
+        // Keep the fallback link to the releases list.
+      }
+    })();
+  </script>
+</body>
+</html>

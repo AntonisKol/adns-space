@@ -29,7 +29,7 @@ That opens the copy in Applications. macOS asks again if you open the app from t
 
 ## Updating
 
-Versions 1.2 and later tell you when a new version is out and install it themselves: click **Update**, then **Restart now**. Updates installed this way open without asking you to allow them again.
+Versions 1.2 and later tell you when a new version is out and can install it: click **Update**, then **Restart now**. Your saved takes are kept. macOS can still ask you to allow the new version.
 
 On older versions, download the newest `.dmg` from the link above and drag it into Applications, choosing **Replace**. Your saved takes are kept either way.
 

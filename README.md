@@ -2,7 +2,7 @@
 
 ADNS SPACE is a one-shot sampler you play on an X-Y pad. Load a short sound, then click and drag on the pad. Left to right picks the note in your chosen key and scale, bottom to top picks the speed, and the built-in arpeggiator plays your sound in time.
 
-Shape it with seven effects: filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan. Six LFOs can move any knob, or the pad itself. A 64-step sequencer plays its own melodies, with parameter locks: any effect knob, or an effect's on/off, can have its own setting on each step. Record everything you play and export it as a WAV file.
+Shape it with ten effects you can drag into any order: filter, two EQs, shifter, phaser-flanger, grain delay, reverb, auto pan, Corpus resonators and a filter delay, with a saturator always last. Six LFOs can move any knob, or the pad itself, and two envelopes move knobs on every note or pad touch. A 64-step sequencer plays its own melodies, with parameter locks: any effect knob, or an effect's on/off, can have its own setting on each step. Record everything you play and export it as a WAV file.
 
 ## Download
 

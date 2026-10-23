@@ -16,16 +16,16 @@ It works on any Mac with **macOS 13 (Ventura) or later**.
 2. Drag **ADNS SPACE** onto the **Applications** folder.
 3. Open **ADNS SPACE** from your Applications folder.
 
-### The first time you open it
+### When macOS asks you to allow it
 
-ADNS SPACE is free and isn't registered with Apple, so the first time you open it your Mac says it *"could not verify ADNS SPACE is free of malware"*. This only happens once:
+ADNS SPACE isn't registered with Apple, so a downloaded copy makes your Mac say it *"could not verify ADNS SPACE is free of malware"*.
 
 1. Click **Done**. Don't click Move to Trash.
 2. Open **System Settings** and go to **Privacy & Security**.
 3. Scroll down to the **Security** section. Next to *"ADNS SPACE was blocked…"*, click **Open Anyway**.
 4. Enter your Mac password if asked, then click **Open Anyway** again.
 
-From then on it opens normally.
+That opens the copy in Applications. macOS asks again if you open the app from the disk image, or if you download a new copy.
 
 ## Updating
 

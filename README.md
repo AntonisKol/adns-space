@@ -1,6 +1,8 @@
 # ADNS SPACE for Mac
 
-A one-shot sampler you play like a Korg Kaossilator. Load a short sample, drag on the XY pad and an arpeggiator plays it in key and in time, through a rack of effects, six LFOs and a 64-step sequencer. Everything you play can be recorded and exported as a WAV file.
+ADNS SPACE is a one-shot sampler you play on an X-Y pad. Load a short sound, then click and drag on the pad. Left to right picks the note in your chosen key and scale, bottom to top picks the speed, and the built-in arpeggiator plays your sound in time.
+
+Shape it with seven effects: filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan. Six LFOs can move any knob, or the pad itself. A 64-step sequencer plays its own melodies and can change effect settings on each step. Record everything you play and export it as a WAV file.
 
 ## Download
 

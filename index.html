@@ -10,7 +10,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ADNS SPACE</title>
-  <meta name="description" content="A one-shot sampler you play on an X-Y pad. Arpeggiator, seven effects, six LFOs, a 64-step sequencer with parameter locks and WAV recording. Free for Mac." />
+  <meta name="description" content="A one-shot sampler you play on an X-Y pad. Arpeggiator, ten effects in any order, a saturator, six LFOs, two envelopes, a 64-step sequencer with parameter locks and WAV recording. Free for Mac." />
   <meta property="og:title" content="ADNS SPACE" />
   <meta property="og:description" content="A one-shot sampler you play on an X-Y pad. Free for Mac." />
   <meta property="og:image" content="https://antoniskol.github.io/adns-space/assets/screenshot.jpg" />
@@ -66,7 +66,7 @@
     figure { margin: 40px 0 0; }
     figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
     figcaption { margin-top: 10px; color: var(--muted); font-size: 13px; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(180px, 100%), 1fr)); gap: 14px; margin: 44px 0 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; margin: 44px 0 0; }
     .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; }
     .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); }
     .card p { margin: 0; color: #c9cdd6; font-size: 15px; }
@@ -123,14 +123,15 @@
     </div>
 
     <figure>
-      <img src="assets/screenshot.jpg" alt="ADNS SPACE: the X-Y pad on the left, the effects rack and LFOs on the right, the arpeggiator and 64-step sequencer along the bottom." width="1400" height="700" />
-      <figcaption>The X-Y pad, the effects rack with LFOs, and the arp and sequencer bar.</figcaption>
+      <img src="assets/screenshot.jpg" alt="ADNS SPACE: the X-Y pad on the left, then the LFOs and envelopes, then the effect strips with the saturator below them, and the arpeggiator and 64-step sequencer along the bottom." width="1400" height="780" />
+      <figcaption>The X-Y pad, the LFOs and envelopes, the effect strips and saturator, and the arp and sequencer bar.</figcaption>
     </figure>
 
     <div class="grid">
       <div class="card"><h3 class="mono">X-Y pad</h3><p>Pitch on one axis, arp speed on the other. Hold keeps it playing when you let go.</p></div>
-      <div class="card"><h3 class="mono">Seven effects</h3><p>Filter, EQ, shifter, phaser-flanger, grain delay, reverb and auto pan.</p></div>
+      <div class="card"><h3 class="mono">Ten effects</h3><p>Filter, two EQs, shifter, phaser-flanger, grain delay, reverb, auto pan, Corpus resonators and filter delay. Drag them into any order. A saturator comes last.</p></div>
       <div class="card"><h3 class="mono">Six LFOs</h3><p>Map any knob, or the pad itself, and let it move on its own.</p></div>
+      <div class="card"><h3 class="mono">Two envelopes</h3><p>Move up to four knobs on every note or every pad touch.</p></div>
       <div class="card"><h3 class="mono">64-step sequencer</h3><p>A note on every step, and parameter locks: any effect knob, or an effect's on/off, can change on any step.</p></div>
       <div class="card"><h3 class="mono">Record &amp; export</h3><p>Every take is saved with its moves. Export 24-bit WAV or re-render with a new sound.</p></div>
     </div>

@@ -47,9 +47,14 @@
     }
     .mono { font-family: 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
     main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 40px; }
-    header { display: flex; align-items: center; gap: 16px; }
-    header a { display: flex; align-items: center; gap: 16px; color: inherit; text-decoration: none; }
+    header { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
     header img { width: 64px; height: 64px; }
+    .back {
+      margin-left: auto; padding: 11px 20px; border: 1px solid var(--accent); border-radius: 3px; color: var(--accent); text-decoration: none;
+      font: 700 13px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .back:hover { background: rgba(215,255,58,.08); }
+    .back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
     .brand { margin: 0; font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: .14em; line-height: 1.1; }
     .kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
     .download {
@@ -107,13 +112,12 @@
 <body>
   <main>
     <header>
-      <a href="../">
-        <img src="../assets/icon.png" alt="" width="64" height="64" />
-        <div>
-          <p class="brand">ADNS SPACE</p>
-          <p class="kicker mono">How it's built</p>
-        </div>
-      </a>
+      <img src="../assets/icon.png" alt="" width="64" height="64" />
+      <div>
+        <p class="brand">ADNS SPACE</p>
+        <p class="kicker mono">How it's built</p>
+      </div>
+      <a class="back" href="../">Download page</a>
     </header>
 
     <article>

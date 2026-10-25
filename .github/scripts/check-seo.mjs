@@ -1,11 +1,16 @@
-// Checks the search and link-preview tags on the site's pages, plus robots.txt,
-// sitemap.xml and CNAME. Run with `node .github/scripts/check-seo.mjs`; exits 1 on a problem.
+// Checks the search and link-preview tags on the site's pages, their local links, the
+// forwarding pages, robots.txt, sitemap.xml and CNAME. Run with `node .github/scripts/check-seo.mjs`; exits 1 on a problem.
 import { existsSync, readFileSync } from 'node:fs';
 
 const SITE = 'https://adnsaudio.com/';
 const PAGES = [
-  { file: 'index.html', url: SITE, types: ['SoftwareApplication', 'Organization', 'WebSite'] },
-  { file: 'code/index.html', url: `${SITE}code/`, types: ['TechArticle'] },
+  { file: 'space/index.html', url: `${SITE}space/`, types: ['SoftwareApplication', 'Organization', 'WebSite'] },
+  { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
+];
+// Old or placeholder addresses that forward to a page (issue #178).
+const FORWARDS = [
+  { file: 'index.html', to: `${SITE}space/` },
+  { file: 'code/index.html', to: `${SITE}space/how-it-works/` },
 ];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
@@ -19,7 +24,8 @@ const tag = (html, re) => decode(html.match(re)?.[1]);
 // A URL on the site must be a file in this repository.
 const onSite = (where, what, url) => {
   if (!url?.startsWith(SITE)) return fail(where, `${what} should be on ${SITE}`);
-  if (!existsSync(url.slice(SITE.length))) fail(where, `${what} ${url} has no file`);
+  const path = url.slice(SITE.length).split('#')[0];
+  if (!existsSync(path === '' || path.endsWith('/') ? `${path}index.html` : path)) fail(where, `${what} ${url} has no file`);
 };
 const meta = (html, attr, name) =>
   tag(html, new RegExp(`<meta ${attr}="${name.replace(/[:.]/g, '\\$&')}" content="([^"]*)"`));
@@ -82,6 +88,11 @@ for (const page of PAGES) {
     }
   }
 
+  for (const [, link] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
+    if (/^(https?:|mailto:|#)/.test(link)) continue;
+    onSite(where, 'link', new URL(link, page.url).href);
+  }
+
   const text = html.replace(/<script(?! type="application\/ld\+json")[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '');
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);
 }
@@ -92,9 +103,17 @@ const sitemap = readFileSync('sitemap.xml', 'utf8');
 for (const page of PAGES) {
   if (!sitemap.includes(`<loc>${page.url}</loc>`)) fail('sitemap.xml', `no ${page.url}`);
 }
+if ((sitemap.match(/<loc>/g) || []).length !== PAGES.length) fail('sitemap.xml', `should list only the ${PAGES.length} pages`);
+
+for (const { file, to } of FORWARDS) {
+  const html = readFileSync(file, 'utf8');
+  if (!html.includes(`<meta http-equiv="refresh" content="0; url=${to}" />`)) fail(file, `should forward to ${to}`);
+  if (tag(html, /<link rel="canonical" href="([^"]*)"/) !== to) fail(file, `canonical should be ${to}`);
+  if (!PAGES.some((page) => page.url === to)) fail(file, `forwards to ${to}, which is not a page`);
+}
 
 if (problems.length) {
   console.error(problems.join('\n'));
   process.exit(1);
 }
-console.log(`SEO check passed: ${PAGES.length} pages, robots.txt, sitemap.xml, CNAME.`);
+console.log(`SEO check passed: ${PAGES.length} pages, ${FORWARDS.length} forwards, robots.txt, sitemap.xml, CNAME.`);

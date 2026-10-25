@@ -1,0 +1,397 @@
+<!doctype html>
+<!--
+  How ADNS SPACE is built: the architecture write-up, served by GitHub Pages at adnsaudio.com/space/how-it-works/.
+  Static HTML in the download page's style, no script. The text is the write-up from the app's
+  (private) source repository; update this page when the write-up changes.
+-->
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>How ADNS SPACE works: a Web Audio sampler and step sequencer</title>
+  <meta name="description" content="How a Mac sampler with an arp and a step sequencer is built: lookahead scheduling, the Web Audio graph, AudioWorklets, modulation and exact re-renders of takes." />
+  <link rel="canonical" href="https://adnsaudio.com/space/how-it-works/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="ADNS Audio" />
+  <meta property="og:url" content="https://adnsaudio.com/space/how-it-works/" />
+  <meta property="og:title" content="How ADNS SPACE works" />
+  <meta property="og:description" content="The architecture of a sampler and step sequencer built with TypeScript, React, the Web Audio API and Electron." />
+  <meta property="og:image" content="https://adnsaudio.com/assets/screenshot.jpg" />
+  <meta property="og:image:width" content="1400" />
+  <meta property="og:image:height" content="780" />
+  <meta property="og:image:alt" content="ADNS SPACE: the X-Y pad, LFOs and envelopes, effect strips, and the arpeggiator and 64-step sequencer." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image:alt" content="ADNS SPACE: the X-Y pad, LFOs and envelopes, effect strips, and the arpeggiator and 64-step sequencer." />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    "headline": "How ADNS SPACE works: a Web Audio sampler and step sequencer",
+    "description": "How a Mac sampler with an arp and a step sequencer is built: lookahead scheduling, the Web Audio graph, AudioWorklets, modulation and exact re-renders of takes.",
+    "url": "https://adnsaudio.com/space/how-it-works/",
+    "image": "https://adnsaudio.com/assets/screenshot.jpg",
+    "about": { "@type": "SoftwareApplication", "name": "ADNS SPACE", "url": "https://adnsaudio.com/space/", "operatingSystem": "macOS 13 or later", "applicationCategory": "MultimediaApplication" },
+    "publisher": { "@type": "Organization", "@id": "https://adnsaudio.com/#org", "name": "ADNS Audio", "url": "https://adnsaudio.com/", "logo": "https://adnsaudio.com/assets/icon.png" }
+  }
+  </script>
+  <link rel="icon" href="/assets/icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    html { font-synthesis: none; }
+    :root {
+      --ground: #05060b;
+      --panel: rgba(12, 14, 23, 0.82);
+      --line: rgba(255, 255, 255, 0.1);
+      --ink: #eceef2;
+      --muted: #9aa0ad;
+      --body: #c9cdd6;
+      --accent: #d7ff3a;
+      /* Diagrams use box-drawing characters, which Share Tech Mono doesn't have. */
+      --code: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+    }
+    * { box-sizing: border-box; }
+    html { background: var(--ground); scroll-padding-top: 24px; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.5), transparent 60%),
+        radial-gradient(1px 1px at 78% 8%, rgba(255,255,255,.4), transparent 60%),
+        radial-gradient(1.5px 1.5px at 64% 42%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.3), transparent 60%),
+        radial-gradient(1px 1px at 90% 82%, rgba(255,255,255,.35), transparent 60%),
+        radial-gradient(900px 500px at 50% -10%, rgba(215,255,58,.06), transparent 70%),
+        var(--ground);
+      font: 17px/1.6 'Chakra Petch', system-ui, sans-serif;
+    }
+    .mono { font-family: 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 40px; }
+    header { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+    header img { width: 64px; height: 64px; }
+    .back {
+      margin-left: auto; padding: 11px 20px; border: 1px solid var(--accent); border-radius: 3px; color: var(--accent); text-decoration: none;
+      font: 700 13px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .back:hover { background: rgba(215,255,58,.08); }
+    .back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .brand { margin: 0; font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: .14em; line-height: 1.1; }
+    .kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
+    .download {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 15px 26px; border-radius: 3px;
+      background: var(--accent); color: #05060b; text-decoration: none;
+      font: 700 15px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
+    }
+    .download:hover { filter: brightness(1.08); }
+    .download:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .download svg { flex: none; }
+    .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 48px 0 0; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .meta a { color: var(--muted); }
+
+    article { max-width: 780px; margin: 40px 0 0; }
+    article h1 { margin: 0; font-size: clamp(24px, 4vw, 32px); font-weight: 600; letter-spacing: .04em; line-height: 1.2; }
+    article h2 {
+      margin: 0 0 14px; color: var(--accent); font: 400 15px/1.4 'Share Tech Mono', ui-monospace, monospace;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    article p, article li, article td { color: var(--body); }
+    article p { margin: 0 0 16px; }
+    article h1 + p { margin-top: 18px; font-size: clamp(18px, 2.4vw, 20px); color: var(--ink); }
+    article strong { color: var(--ink); font-weight: 600; }
+    article a { color: var(--accent); }
+    article ul, article ol { margin: 0 0 16px; padding-left: 22px; }
+    article li { margin: 0 0 8px; }
+    article hr { margin: 44px 0; border: 0; border-top: 1px solid var(--line); }
+    article code { font: .86em var(--code); color: var(--ink); background: rgba(255,255,255,.06); padding: .1em .35em; border-radius: 3px; }
+    article p.files { margin-top: -6px; }
+    article p.files code { background: none; padding: 0; color: var(--muted); }
+    pre.diagram {
+      margin: 0 0 20px; padding: 16px 18px; overflow-x: auto;
+      background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+    }
+    pre.diagram code { display: block; width: max-content; font: 13px/1.4 var(--code); color: #dfe3ea; background: none; padding: 0; }
+    .table { margin: 0 0 20px; overflow-x: auto; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; }
+    table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.5; }
+    th, td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
+    tr:last-child td { border-bottom: 0; }
+    th { color: var(--accent); font: 400 12px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+    td:first-child { color: var(--ink); white-space: nowrap; }
+
+    footer { margin: 40px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    footer a { color: var(--muted); }
+    @media (max-width: 560px) {
+      main { padding-top: 32px; }
+      header img { width: 52px; height: 52px; }
+      .download { width: 100%; justify-content: center; }
+      td:first-child { white-space: normal; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <img src="/assets/icon.png" alt="" width="64" height="64" />
+      <div>
+        <p class="brand">ADNS SPACE</p>
+        <p class="kicker mono">How it's built</p>
+      </div>
+      <a class="back" href="../">Download page</a>
+    </header>
+
+    <article>
+<h1 id="how-adns-space-works">How ADNS SPACE works</h1>
+<p>ADNS SPACE is a one-shot sampler you play on an X-Y pad. You load a short sample, and an arpeggiator plays it in your key and scale while you drag. The sound runs through ten effects you can put in any order and a Saturator at the end. Six LFOs and two envelopes move the knobs, and a 64-step sequencer can lock any knob on any step. Everything you play is recorded as audio and as automation, so a performance can be re-rendered later with a different sample, key or scale.</p>
+<p>It runs in the browser and as a Mac app. There is no server and no account. It is built with TypeScript, React, Zustand and the Web Audio API, with AudioWorklets for the effects that need per-sample code, and Electron for the Mac app.</p>
+<p>This page explains how the parts fit together:</p>
+<ol>
+<li><a href="#1-two-threads-two-clocks">Two threads, two clocks</a></li>
+<li><a href="#2-the-lookahead-note-scheduler">The lookahead note scheduler</a></li>
+<li><a href="#3-the-audio-graph-and-the-effect-order">The audio graph and the effect order</a></li>
+<li><a href="#4-audioworklets">AudioWorklets</a></li>
+<li><a href="#5-the-store-and-modulation">The store and modulation</a></li>
+<li><a href="#6-takes-recording-and-exact-re-render">Takes: recording and exact re-render</a></li>
+<li><a href="#7-the-mac-app-electron-updates-and-releases">The Mac app: Electron, updates and releases</a></li>
+<li><a href="#8-how-it-is-tested">How it is tested</a></li>
+</ol>
+<hr>
+<h2 id="1-two-threads-two-clocks">1. Two threads, two clocks</h2>
+<p>The app has two threads and two clocks.</p>
+<pre class="diagram"><code> MAIN THREAD (JavaScript, can stall)                AUDIO THREAD (real time)
+ ──────────────────────────────────                 ────────────────────────
+ React UI ──► Zustand store ◄── arp, sequencer        Web Audio nodes
+                   │            LFOs, envelopes        AudioWorklet processors
+                   │            recorder                (grain, shifter, phaser,
+                   ▼                                     auto pan, corpus, recorder)
+            engine.apply(params) ─────────────────────► AudioParams, port messages
+            engine.trigger(time) ─────────────────────► note starts at exactly `time`
+
+ clock: setInterval / setTimeout                     clock: AudioContext.currentTime
+        (jitters by many ms)                                 (sample-accurate)</code></pre>
+<p>JavaScript timers are late whenever the main thread is busy drawing, garbage-collecting or handling input. The audio clock never is. So the rule throughout the code is: <strong>timers decide <em>when to look</em>, the audio clock decides <em>when things happen</em></strong>. Every note, step and lock carries an <code>AudioContext</code> timestamp. The LFOs, envelopes and recorder all measure time on the audio clock too, which is also what makes a re-render repeatable (section 6).</p>
+<p>The engine, arpeggiator, sequencer, LFOs and recorder are plain modules: module state plus one exported object, no classes. The only classes are the AudioWorklet processors, because the Web Audio API requires <code>class … extends AudioWorkletProcessor</code>.</p>
+<hr>
+<h2 id="2-the-lookahead-note-scheduler">2. The lookahead note scheduler</h2>
+<p class="files"><code>src/audio/arp.ts</code> and <code>src/audio/seq.ts</code></p>
+<p>Starting each note from a timer callback would make the rhythm wobble with every hiccup on the main thread. Instead both the arpeggiator and the sequencer use the classic Web Audio <em>lookahead</em> pattern:</p>
+<ul>
+<li>a timer runs every <strong>20 ms</strong>;</li>
+<li>on each run it schedules every note that falls within the next <strong>100 ms</strong>, each at its exact audio time;</li>
+<li>a running <code>gridTime</code> holds where the next note belongs on the grid, so timing errors never accumulate.</li>
+</ul>
+<pre class="diagram"><code>audio time ──────────────────────────────────────────────────────────────►
+                now                      now + 100 ms (horizon)
+                 │◄──────── lookahead ────────►│
+ grid:     ·     │  ♪         ♪         ♪      │  ♪         ♪
+                 │  └─ scheduled on this tick ─┘  └─ next ticks
+ timer:    ▲     ▲     ▲     ▲     ▲   (every 20 ms, may be late; the notes are not)</code></pre>
+<p>As long as a timer is never more than about 80 ms late, nothing is lost. A late timer only means notes are handed to the audio thread a little closer to their time.</p>
+<p>Each note reads the settings <strong>at the moment it is scheduled</strong>, through the same &quot;effective&quot; values the effects hear (section 5). So an LFO on the pad&#39;s X axis plays a melody, and an LFO on Gate or Swing changes the next note. Swing delays every second 1/8 or 1/16 note by a fraction of its length. Gate turns into a fade-out time passed with the note. The first note is placed 5 ms after the pad is touched, so it plays straight away instead of waiting for the next grid line.</p>
+<p><strong>The sequencer&#39;s step locks.</strong> A step can hold its own value for any effect knob. The note is scheduled up to 100 ms early, but the knob must change exactly when the step starts, not when it was scheduled. Each scheduled step therefore gets:</p>
+<ol>
+<li>a timer set for the moment the step starts, which hands its locks to the modulation layer;</li>
+<li>a fallback on every 20 ms tick: the latest step whose audio time has passed is applied, in case that timer fired late.</li>
+</ol>
+<p>Steps only ever move forward (a counter of the last step applied), so an early timer and a later tick never undo each other.</p>
+<hr>
+<h2 id="3-the-audio-graph-and-the-effect-order">3. The audio graph and the effect order</h2>
+<p class="files"><code>src/audio/engine.ts</code>, <code>src/audio/fx/</code></p>
+<pre class="diagram"><code> sample ─► voice ─► voiceBus ─► [ 10 effects, in the order of the strips ] ─► fade
+                                 Filter ─► EQ 1 ─► Shifter ─► Phaser-Flanger ─► Grain delay
+                                 ─► Space ─► Auto pan ─► EQ 2 ─► Corpus ─► Filter delay
+                                 (the starting order; drag a strip to change it)
+
+ fade ─► Saturator (always last) ─► safety limiter (-0.3 dB) ─┬─► speakers
+                                                               ├─► level meter
+                                                               └─► recorder ─► silent gain ─► speakers</code></pre>
+<p><strong>The voice.</strong> Like a classic hardware sampler in mono mode, one note sounds at a time. A note is an <code>AudioBufferSourceNode</code> whose playback rate is <code>2^((note − root) / 12)</code>, so higher notes are shorter and brighter, as on a real sampler. A new note fades the previous one out over 4 ms at its own start time (&quot;choke&quot;), so notes cut each other off without clicks. A gate shorter than the sample schedules an 8 ms fade-out. A second gain node per voice follows an envelope when one is shaping loudness, kept separate from the choke.</p>
+<p><strong>Every effect has the same shape.</strong> An effect is a factory function that returns <code>input</code>, <code>output</code> and <code>apply(params)</code>. Most are built on a shared &quot;slot&quot;: a dry path, a wet path and an equal-power Mix between them. Off means dry only, so an effect that is switched off costs nothing in sound. Every parameter change ramps over 15 ms (<code>setTargetAtTime</code>), so knob turns and LFO movement never click.</p>
+<p><strong>Reordering.</strong> The effects can be dragged into any order. To rewire the graph while sound is playing, the engine fades a gain stage to silence over 12 ms, disconnects every effect output, reconnects them in the new order and fades back in. The order is a list of effect ids. Anything read back from storage or from an old take goes through <code>normalizeOrder()</code>: unknown or repeated ids are dropped and missing ones are put back in their default place. That way an effect added in a later version still appears in an order saved by an older one.</p>
+<p><strong>The end of the chain</strong> does not move. The Saturator is a <code>WaveShaperNode</code>, 4× oversampled to keep aliasing down, with a curve built in code (soft clipping, a cubic term for third harmonics, ripples for folded tones and a gate near zero). It is only rebuilt when one of the knobs that shape it changes. After it, a <code>DynamicsCompressorNode</code> at -0.3 dB, 20:1, acts as a hidden safety limiter. The recorder hangs off the limiter through a gain set to 0: an AudioWorklet only runs while something pulls on its output.</p>
+<p><strong>The reverb</strong> is a <code>ConvolverNode</code> with an impulse response generated in code from a fixed seed, so the same settings always give the same reverb. Generating it takes time, so rebuilds wait until Size, Decay or Damp have stopped moving for 120 ms. That is also why those three knobs can&#39;t be mapped or locked.</p>
+<hr>
+<h2 id="4-audioworklets">4. AudioWorklets</h2>
+<p class="files"><code>src/audio/worklets/</code></p>
+<p>Built-in Web Audio nodes cover filters, delays, gains and convolution. Anything that needs its own per-sample code runs in an AudioWorklet processor on the audio thread:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Processor</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Grain delay</td>
+<td>A 4-second circular buffer. Hann-windowed grains with 2× overlap read it back delayed, pitched and scattered. The reverb&#39;s shimmer reuses it at +12 semitones.</td>
+</tr>
+<tr>
+<td>Shifter</td>
+<td>Pitch mode: a dual-tap delay-line shifter with crossfaded windows. Freq mode: single-sideband frequency shifting through a 90° all-pass network (I/Q). Ring mode: a ring modulator. A feedback delay sends the result back in for spirals.</td>
+</tr>
+<tr>
+<td>Phaser-Flanger</td>
+<td>Up to 84 first-order all-pass stages with coefficients recomputed every 16 samples, or a swept fractional delay for Flanger and Doubler.</td>
+</tr>
+<tr>
+<td>Auto pan</td>
+<td>Left and right gains computed for every sample, so even fast square waves stay exact.</td>
+</tr>
+<tr>
+<td>Corpus</td>
+<td>Modal synthesis: up to 16 band-pass resonators per channel, one per partial of the chosen object (beam, marimba, string, membrane, plate, pipe, tube). Each resonator&#39;s Q is set so it rings for the requested decay time.</td>
+</tr>
+<tr>
+<td>Recorder</td>
+<td>Copies the limiter&#39;s output into 4096-frame blocks and <em>transfers</em> them to the main thread (no copy).</td>
+</tr>
+</tbody>
+</table></div>
+<p>How they talk to the app:</p>
+<ul>
+<li><strong>Settings arrive as messages.</strong> Each effect turns its knobs into real units (Hz, seconds, cents) and posts them over the worklet&#39;s port only when they actually changed, so a 10 ms LFO tick doesn&#39;t flood the audio thread.</li>
+<li><strong>Time comes from the audio thread.</strong> A processor&#39;s LFO phase is computed from the worklet&#39;s own <code>currentTime</code> minus a start time (<code>epoch</code> / <code>resetAt</code>) the app sends when a take starts. It is never counted from the moment the processor happened to be created.</li>
+<li><strong>Randomness is seeded.</strong> Grain spray and the random auto-pan shape use a seeded generator or hash, never <code>Math.random()</code>.</li>
+<li><strong>Memory can be wiped.</strong> A <code>clear</code> message empties delay lines and filter state, so a re-render starts from silence instead of the last performance&#39;s tail.</li>
+</ul>
+<p>The last two points are what make re-renders exact (section 6).</p>
+<p>Two practical details: the build keeps worklet files as real files instead of inlining them as <code>data:</code> URLs, which <code>addModule()</code> does not reliably accept. And the Mac app has to serve them with a JavaScript content type, or <code>addModule()</code> refuses them.</p>
+<hr>
+<h2 id="5-the-store-and-modulation">5. The store and modulation</h2>
+<p class="files"><code>src/state/store.ts</code>, <code>src/state/params.ts</code>, <code>src/state/history.ts</code>, <code>src/audio/lfo/index.ts</code>, <code>src/audio/env.ts</code></p>
+<p><strong>One flat record of numbers.</strong> Every control in the app, from every knob, selector and switch to the sequencer&#39;s Play button and each LFO&#39;s mapping, is a number in one <code>Record&lt;string, number&gt;</code> in a single Zustand store. Knobs are always 0 to 1. A shared <code>map</code> table turns that into Hz, dB, ms and so on, and the engine and the on-screen labels both use it, so they never disagree. Because everything is a number in one place:</p>
+<ul>
+<li>React components subscribe to the slices they draw and re-render only when those change;</li>
+<li>audio modules subscribe outside React (<code>useStore.subscribe</code>, <code>getState()</code>);</li>
+<li>the recorder records <em>any</em> change by subscribing once (section 6);</li>
+<li>an LFO mapping is just a number (an index into a target list), so it is recorded and replayed like a knob.</li>
+</ul>
+<p>The store is updated immutably, so &quot;did anything change?&quot; is a single reference comparison.</p>
+<p><strong>Base values and effective values.</strong> The store holds what you set: the values the knobs show and the recorder records. What the effects hear is computed from it in layers, every time something changes and every 10 ms while anything moves:</p>
+<pre class="diagram"><code> store (your knobs) ──► step knob locks ──► LFOs ──► envelopes ──► effective params
+                        (replace the knob    (swing   (add on top)     │
+                         for that step)       around                   ├─► arp &amp; sequencer (next note)
+                                              it)                      └─► engine.apply() ─► effects
+                                                                             ▲
+                         effect on/off locks ── only while that step is the voice</code></pre>
+<ul>
+<li><strong>Step locks</strong> replace a knob&#39;s value for the step that is playing. An LFO mapped to a locked knob swings around the lock instead of the knob.</li>
+<li><strong>LFOs</strong> add <code>wave × depth + offset</code>, scaled and clamped to the LFO&#39;s Min and Max. The 10 ms ticker only runs while at least one LFO or envelope is actually driving something.</li>
+<li><strong>Envelopes</strong> add <code>level × amount</code> on top. An envelope that drives no knob shapes the note&#39;s loudness instead.</li>
+<li><strong>Effect on/off locks</strong> are kept out of that mix on purpose. A step can switch an effect on just for itself, but the pad&#39;s notes and the unlocked steps keep the switch as you left it. So the engine only adds those switches while a sequencer step is the sound playing, and drops them again when a pad note takes over.</li>
+</ul>
+<p><strong>Modulation is a function of time, not of state.</strong> An LFO doesn&#39;t keep a running phase. Its phase is computed from the time since a reference point: the start of the take (Free), the last pad touch (Touch) or the last note (Note), or the last Reset press if that is later. Its random shapes take their values from a hash of <code>(seed, LFO, cycle)</code>. Envelopes are a pure ADSR function of the note&#39;s start and end times. Given the same seed and the same timeline, the modulation comes out identical, which section 6 relies on.</p>
+<p><strong>Saved takes depend on the order of the target list.</strong> Takes store LFO mappings as indices into the target list. New targets are therefore only ever appended, and removed effects keep their slots. A test pins the full list so a reorder can&#39;t slip in and silently remap old takes.</p>
+<p><strong>Undo and Redo come almost for free.</strong> Because every setting is in the store and the store is immutable, the history module is one more subscriber:</p>
+<ul>
+<li>The first change of a gesture keeps a reference to the state just before it. The gesture ends on mouse-up, on the next mouse-down, or 400 ms after the last change when no button is held: keys, the wheel, a pick from a menu, or a click whose change lands after mouse-up. Then the two states are compared, and only the differences are kept: each changed param as <code>[before, after]</code>, and each changed sequencer step as a pair of references, since steps are immutable objects too. So a whole knob drag is one step, and a step costs a few numbers, which is why the history can keep 10,000 of them.</li>
+<li>Undo writes the &quot;before&quot; side back in one store update, and Redo the &quot;after&quot; side. They are ordinary changes, so the recorder logs them like any other.</li>
+<li>Playback switches (sequencer Play, arp Hold) and the LFO restart counters are left out, and so is anything a re-render writes while it loads and replays a take. The effect order, takes and the sample sit outside <code>params</code> and <code>steps</code>, the only two parts the history compares, so they are never undone.</li>
+</ul>
+<hr>
+<h2 id="6-takes-recording-and-exact-re-render">6. Takes: recording and exact re-render</h2>
+<p class="files"><code>src/audio/recording.ts</code>, <code>src/storage/db.ts</code></p>
+<p>A take is the audio plus everything needed to play the performance again:</p>
+<div class="table"><table>
+<thead>
+<tr>
+<th>Part</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Audio</td>
+<td>24-bit stereo WAV from the recorder worklet. Trailing silence is trimmed, leaving 100 ms.</td>
+</tr>
+<tr>
+<td>Snapshot</td>
+<td>The full settings record at the first touch.</td>
+</tr>
+<tr>
+<td>Event log</td>
+<td>Every settings change <code>{t, key, value}</code> and every pad move <code>{t, x, y, touch}</code>, with <code>t</code> in seconds of audio time since the start.</td>
+</tr>
+<tr>
+<td>Seed</td>
+<td>One random number that every random part of the sound is derived from.</td>
+</tr>
+<tr>
+<td>Stop time</td>
+<td>When Stop was pressed. The tails after it ring out but aren&#39;t part of the performance.</td>
+</tr>
+<tr>
+<td>Pattern and effect order</td>
+<td>Copies of the sequencer steps and the effect order at the start.</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Recording.</strong> Rec arms the recorder, and the next pad touch (or ▶ on the sequencer) starts the take. Pad gestures from your mouse and from a replay go through the same function, which starts the recorder <em>before</em> the pad is marked as touched, so the first note is always in the take. At the start the recorder:</p>
+<ol>
+<li>picks a seed and notes the audio time <code>t0</code>;</li>
+<li>sends that seed and <code>t0</code> to the arpeggiator&#39;s random pattern, the grain and auto-pan worklets, the shifter and phaser LFOs and the app&#39;s LFOs;</li>
+<li>copies the settings, the pattern and the effect order;</li>
+<li>subscribes to the store: from then on every change is timestamped on the audio clock and appended to the log.</li>
+</ol>
+<p>On Stop the arpeggiator and sequencer stop, but recording goes on until the reverb and delays have died away (0.4 s below -66 dBFS, or 30 s at most). The take is then encoded and saved to IndexedDB.</p>
+<p><strong>Re-render</strong> plays the performance again through the <em>current</em> sample, key and scale:</p>
+<ol>
+<li>Clear every effect&#39;s memory, so no tail from before leaks in.</li>
+<li>Apply the take&#39;s snapshot, except key and scale, which come from the screen. A setting added in a later version than the take gets its default, which is how the take sounded.</li>
+<li>Use the take&#39;s pattern and effect order, without touching the ones on screen.</li>
+<li>Start a new take with the <strong>same seed</strong>, so every random source restarts identically.</li>
+<li>Replay the event log on a 4 ms timer against the audio clock, through the same code paths as live input, then stop at the stored stop time.</li>
+</ol>
+<pre class="diagram"><code> saved take:   snapshot ─┐   seed ─┐   events: t=0.00 pad down (0.31, 0.62)
+                         │         │           t=0.42 filter.cutoff = 0.55
+                         ▼         ▼           t=1.10 lfo2.target = 14 …
+ re-render:    apply ─► reseed every random source ─► dispatch each event when audio time ≥ t
+                                    │
+                                    └─► arp Rnd pattern, grain spray, reverb shimmer,
+                                        auto-pan wave, shifter &amp; phaser phase, LFO shapes &amp; jitter</code></pre>
+<p>Every timestamp, from the log to the LFO phases and the worklets&#39; epochs, is relative to the take&#39;s start on the audio clock, and nothing uses unseeded randomness. A replay only has to recreate the inputs: the scheduler, the modulation and the DSP then produce the same notes at the same offsets. In testing, a re-render with the same settings matched the original take with an envelope correlation above 0.999. The new take is saved as a take of its own.</p>
+<hr>
+<h2 id="7-the-mac-app-electron-updates-and-releases">7. The Mac app: Electron, updates and releases</h2>
+<p class="files"><code>electron/</code>, <code>.github/workflows/release.yml</code></p>
+<p><strong>The same web app inside a locked-down window.</strong> The Mac app loads the same build as the browser version. It is served under a custom privileged scheme, <code>app://local/</code>, rather than <code>file://</code>, so the page has a real origin: IndexedDB persists, worklets load with <code>addModule()</code> and absolute asset paths work. A small pure function maps each address to a file and refuses anything that would escape the build folder (<code>../</code>, the same percent-encoded, null bytes). The page runs sandboxed with context isolation and no Node access. Its only bridge to the Mac side is a preload script that exposes a fixed set of update calls. Links to other sites open in the default browser, and leaving the app is blocked.</p>
+<p>The window has one fixed size, 1400 × 780, like a plugin window, which fits the 13-inch MacBook Air with the menu bar and Dock. Only on a screen too small for that does it shrink, keeping its shape. There is no title bar: close and minimize sit in the app&#39;s own top bar. Electron can&#39;t hide only the green zoom button, so a tiny native addon (Objective-C, Node-API) does that. <code>--smoke-test</code> opens the app hidden, waits until the audio engine reports that every worklet has loaded, and exits 0 or 1. The release pipeline uses it on the packaged app.</p>
+<p><strong>Self-updates.</strong> The app checks the public releases 5 seconds after start, every 10 minutes and when you come back to it. If a newer zip is there, a banner offers Update, Later or Skip this version. An update is only installed after these checks:</p>
+<pre class="diagram"><code> GitHub releases API ─► newest ADNS-SPACE-&lt;x.y.z&gt;-mac.zip above the running version (not skipped)
+   ─► can this copy replace itself? (not on the disk image, not translocated, folder writable)
+   ─► download to a temp folder ─► full size? ─► unzip (ditto)
+   ─► codesign --verify --deep --strict, with the requirement
+      "anchor apple generic and certificate leaf[subject.OU] = &lt;the running app's team&gt;"
+   ─► is its version the one announced?
+   ─► Restart now: a small detached script waits for the app to quit, moves the old app aside,
+      moves the new one in (restoring the old one if that fails), and reopens it</code></pre>
+<p>The team requirement means a signed app only accepts an update signed by the same Apple Developer team through Apple&#39;s certificate chain. An older ad-hoc signed version accepts any valid signature, so it could update to the first signed one. All of this logic is plain functions with no Electron imports, so it is unit-tested, including the swap script.</p>
+<p><strong>Releases.</strong> Pushing a version tag starts a workflow on a macOS runner:</p>
+<pre class="diagram"><code> tag X.Y.Z ─► tag matches package.json? ─► type-check ─► unit tests ─► build
+   ─► sign with the Developer ID (keychain created for this run) ─► notarize
+   ─► verify: team, hardened runtime, stapled ticket, Gatekeeper
+   ─► start the packaged app (--smoke-test) ─► end-to-end tests against the packaged app
+   ─► notarize the disk image ─► publish to the public download repository</code></pre>
+<p>The source repository is private. Releases go to a separate public repository that only holds the downloads. The signing keychain and API key exist only for the length of the run.</p>
+<hr>
+<h2 id="8-how-it-is-tested">8. How it is tested</h2>
+<ul>
+<li><strong>Unit tests (Vitest, jsdom)</strong> sit next to the code. The schedulers, LFOs, envelopes and recorder run against a fake engine whose audio clock the test moves by hand, in step with Vitest&#39;s fake timers. So &quot;this note lands at exactly 0.6250 s&quot; and &quot;this lock applies at the start of step 5, not when it was scheduled&quot; are ordinary assertions. The real worklet files run sample by sample in Node to check, for example, that a phaser notch sits at Center and that maximum feedback stays stable. Every effect is also checked against a recording fake of Web Audio. Undo and Redo are tested gesture by gesture: a drag, a slide across steps, a typed BPM followed by a drag, a pick from a menu, and a re-render that must leave no step behind. The build runs all of them.</li>
+<li><strong>End-to-end tests (Playwright)</strong> start the real Mac app with a temporary profile and use it like a person: load a WAV, play the pad, record, re-render, download, restart. The output meter checks that sound really comes out. Separate tests run a real self-update on a packaged app, and screenshot tests compare the effect strips, the LFO and envelope panels and the Saturator bar with saved pictures.</li>
+<li><strong>CI</strong> type-checks, tests and builds every pull request. The release workflow repeats the end-to-end tests on the packaged, signed app before anything is published.</li>
+</ul>
+    </article>
+
+    <div class="cta">
+      <a class="download" href="https://github.com/AntonisKol/adns-space/releases">
+        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v10M4.5 7.5 9 12l4.5-4.5M2.5 15.5h13" fill="none" stroke="currentColor" stroke-width="2"/></svg>
+        Download for Mac
+      </a>
+      <span class="meta">Free · macOS 13 or later</span>
+    </div>
+
+    <footer>
+      © Antonios Kolovos. All rights reserved.
+    </footer>
+  </main>
+</body>
+</html>

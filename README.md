@@ -6,7 +6,7 @@ Shape it with ten effects you can drag into any order: filter, two EQs, shifter,
 
 ## Download
 
-**[Download ADNS SPACE for Mac](https://adnsaudio.com/)**: the download page has the button for the newest version, and the changelog for each version.
+**[Download ADNS SPACE for Mac](https://adnsaudio.com/space/)**: the download page has the button for the newest version, and the changelog for each version.
 
 It works on any Mac with **macOS 13 (Ventura) or later**.
 

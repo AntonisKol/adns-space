@@ -9,8 +9,8 @@ const PAGES = [
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [
-  { file: 'index.html', to: `${SITE}space/` },
-  { file: 'code/index.html', to: `${SITE}space/how-it-works/` },
+  { file: 'index.html', to: `${SITE}space/`, types: ['Organization', 'WebSite'] },
+  { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
@@ -24,8 +24,30 @@ const tag = (html, re) => decode(html.match(re)?.[1]);
 // A URL on the site must be a file in this repository.
 const onSite = (where, what, url) => {
   if (!url?.startsWith(SITE)) return fail(where, `${what} should be on ${SITE}`);
-  const path = url.slice(SITE.length).split('#')[0];
+  const path = decodeURI(url.slice(SITE.length).split(/[?#]/)[0]);
   if (!existsSync(path === '' || path.endsWith('/') ? `${path}index.html` : path)) fail(where, `${what} ${url} has no file`);
+};
+// Every local link and image has its file; other schemes, other hosts and comments are skipped.
+const checkLinks = (where, html, base) => {
+  for (const [, link] of html.replace(/<!--[\s\S]*?-->/g, '').matchAll(/<[^>]+\s(?:href|src)="([^"]+)"/g)) {
+    if (/^#/.test(link)) continue;
+    const url = new URL(link, base);
+    if (url.origin === new URL(SITE).origin) onSite(where, 'link', url.href);
+  }
+};
+const parseLd = (where, html) => {
+  const items = [];
+  for (const [, json] of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try {
+      for (const item of [JSON.parse(json)].flat()) {
+        if (item && typeof item === 'object') items.push(item);
+        else fail(where, 'structured data holds something that is not an object');
+      }
+    } catch (e) {
+      fail(where, `structured data is not valid JSON: ${e.message}`);
+    }
+  }
+  return items;
 };
 const meta = (html, attr, name) =>
   tag(html, new RegExp(`<meta ${attr}="${name.replace(/[:.]/g, '\\$&')}" content="([^"]*)"`));
@@ -52,18 +74,7 @@ for (const page of PAGES) {
   onSite(where, 'og:image', meta(html, 'property', 'og:image'));
   if (meta(html, 'name', 'twitter:card') !== 'summary_large_image') fail(where, 'twitter:card should be summary_large_image');
 
-  const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
-  const items = [];
-  for (const [, json] of blocks) {
-    try {
-      for (const item of [JSON.parse(json)].flat()) {
-        if (item && typeof item === 'object') items.push(item);
-        else fail(where, 'structured data holds something that is not an object');
-      }
-    } catch (e) {
-      fail(where, `structured data is not valid JSON: ${e.message}`);
-    }
-  }
+  const items = parseLd(where, html);
   for (const type of page.types) {
     if (!items.some((item) => item['@type'] === type)) fail(where, `no ${type} structured data`);
   }
@@ -88,10 +99,7 @@ for (const page of PAGES) {
     }
   }
 
-  for (const [, link] of html.matchAll(/(?:href|src)="([^"]+)"/g)) {
-    if (/^(https?:|mailto:|#)/.test(link)) continue;
-    onSite(where, 'link', new URL(link, page.url).href);
-  }
+  checkLinks(where, html, page.url);
 
   const text = html.replace(/<script(?! type="application\/ld\+json")[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '');
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);
@@ -105,9 +113,15 @@ for (const page of PAGES) {
 }
 if ((sitemap.match(/<loc>/g) || []).length !== PAGES.length) fail('sitemap.xml', `should list only the ${PAGES.length} pages`);
 
-for (const { file, to } of FORWARDS) {
+for (const { file, to, types } of FORWARDS) {
   const html = readFileSync(file, 'utf8');
   if (!html.includes(`<meta http-equiv="refresh" content="0; url=${to}" />`)) fail(file, `should forward to ${to}`);
+  if (!html.includes(`location.replace('${to}' + location.hash)`)) fail(file, `should forward to ${to} keeping the #section`);
+  if (!html.includes(`<a href="${to}">`)) fail(file, `the fallback link should go to ${to}`);
+  if (meta(html, 'property', 'og:url') !== to || !meta(html, 'property', 'og:image')) fail(file, 'needs og:url and og:image for link previews');
+  const items = parseLd(file, html);
+  for (const type of types) if (!items.some((item) => item['@type'] === type)) fail(file, `no ${type} structured data`);
+  checkLinks(file, html, `${SITE}${file.replace(/index\.html$/, '')}`);
   if (tag(html, /<link rel="canonical" href="([^"]*)"/) !== to) fail(file, `canonical should be ${to}`);
   if (!PAGES.some((page) => page.url === to)) fail(file, `forwards to ${to}, which is not a page`);
 }

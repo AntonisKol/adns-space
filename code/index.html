@@ -259,7 +259,7 @@
 <p>Two practical details: the build keeps worklet files as real files instead of inlining them as <code>data:</code> URLs, which <code>addModule()</code> does not reliably accept. And the Mac app has to serve them with a JavaScript content type, or <code>addModule()</code> refuses them.</p>
 <hr>
 <h2 id="5-the-store-and-modulation">5. The store and modulation</h2>
-<p class="files"><code>src/state/store.ts</code>, <code>src/state/params.ts</code>, <code>src/audio/lfo/index.ts</code>, <code>src/audio/env.ts</code></p>
+<p class="files"><code>src/state/store.ts</code>, <code>src/state/params.ts</code>, <code>src/state/history.ts</code>, <code>src/audio/lfo/index.ts</code>, <code>src/audio/env.ts</code></p>
 <p><strong>One flat record of numbers.</strong> Every control in the app, from every knob, selector and switch to the sequencer&#39;s Play button and each LFO&#39;s mapping, is a number in one <code>Record&lt;string, number&gt;</code> in a single Zustand store. Knobs are always 0 to 1. A shared <code>map</code> table turns that into Hz, dB, ms and so on, and the engine and the on-screen labels both use it, so they never disagree. Because everything is a number in one place:</p>
 <ul>
 <li>React components subscribe to the slices they draw and re-render only when those change;</li>
@@ -283,6 +283,12 @@
 </ul>
 <p><strong>Modulation is a function of time, not of state.</strong> An LFO doesn&#39;t keep a running phase. Its phase is computed from the time since a reference point: the start of the take (Free), the last pad touch (Touch) or the last note (Note), or the last Reset press if that is later. Its random shapes take their values from a hash of <code>(seed, LFO, cycle)</code>. Envelopes are a pure ADSR function of the note&#39;s start and end times. Given the same seed and the same timeline, the modulation comes out identical, which section 6 relies on.</p>
 <p><strong>Saved takes depend on the order of the target list.</strong> Takes store LFO mappings as indices into the target list. New targets are therefore only ever appended, and removed effects keep their slots. A test pins the full list so a reorder can&#39;t slip in and silently remap old takes.</p>
+<p><strong>Undo and Redo come almost for free.</strong> Because every setting is in the store and the store is immutable, the history module is one more subscriber:</p>
+<ul>
+<li>The first change of a gesture keeps a reference to the state just before it. The gesture ends on mouse-up, on the next mouse-down, or 400 ms after the last change when no button is held: keys, the wheel, a pick from a menu, or a click whose change lands after mouse-up. Then the two states are compared, and only the differences are kept: each changed param as <code>[before, after]</code>, and each changed sequencer step as a pair of references, since steps are immutable objects too. So a whole knob drag is one step, and a step costs a few numbers, which is why the history can keep 10,000 of them.</li>
+<li>Undo writes the &quot;before&quot; side back in one store update, and Redo the &quot;after&quot; side. They are ordinary changes, so the recorder logs them like any other.</li>
+<li>Playback switches (sequencer Play, arp Hold) and the LFO restart counters are left out, and so is anything a re-render writes while it loads and replays a take. The effect order, takes and the sample sit outside <code>params</code> and <code>steps</code>, the only two parts the history compares, so they are never undone.</li>
+</ul>
 <hr>
 <h2 id="6-takes-recording-and-exact-re-render">6. Takes: recording and exact re-render</h2>
 <p class="files"><code>src/audio/recording.ts</code>, <code>src/storage/db.ts</code></p>
@@ -369,7 +375,7 @@
 <hr>
 <h2 id="8-how-it-is-tested">8. How it is tested</h2>
 <ul>
-<li><strong>Unit tests (Vitest, jsdom)</strong> sit next to the code. The schedulers, LFOs, envelopes and recorder run against a fake engine whose audio clock the test moves by hand, in step with Vitest&#39;s fake timers. So &quot;this note lands at exactly 0.6250 s&quot; and &quot;this lock applies at the start of step 5, not when it was scheduled&quot; are ordinary assertions. The real worklet files run sample by sample in Node to check, for example, that a phaser notch sits at Center and that maximum feedback stays stable. Every effect is also checked against a recording fake of Web Audio. The build runs all of them.</li>
+<li><strong>Unit tests (Vitest, jsdom)</strong> sit next to the code. The schedulers, LFOs, envelopes and recorder run against a fake engine whose audio clock the test moves by hand, in step with Vitest&#39;s fake timers. So &quot;this note lands at exactly 0.6250 s&quot; and &quot;this lock applies at the start of step 5, not when it was scheduled&quot; are ordinary assertions. The real worklet files run sample by sample in Node to check, for example, that a phaser notch sits at Center and that maximum feedback stays stable. Every effect is also checked against a recording fake of Web Audio. Undo and Redo are tested gesture by gesture: a drag, a slide across steps, a typed BPM followed by a drag, a pick from a menu, and a re-render that must leave no step behind. The build runs all of them.</li>
 <li><strong>End-to-end tests (Playwright)</strong> start the real Mac app with a temporary profile and use it like a person: load a WAV, play the pad, record, re-render, download, restart. The output meter checks that sound really comes out. Separate tests run a real self-update on a packaged app, and screenshot tests compare the effect strips, the LFO and envelope panels and the Saturator bar with saved pictures.</li>
 <li><strong>CI</strong> type-checks, tests and builds every pull request. The release workflow repeats the end-to-end tests on the packaged, signed app before anything is published.</li>
 </ul>

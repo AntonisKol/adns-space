@@ -1,21 +1,22 @@
 <!doctype html>
 <!--
-  How ADNS SPACE is built: the architecture write-up, served by GitHub Pages at adnsaudio.com/space/how-it-works/.
-  Static HTML in the download page's style, no script. The text is the write-up from the app's
-  (private) source repository; update this page when the write-up changes.
+  How to use ADNS SPACE, served by GitHub Pages at adnsaudio.com/space/how-it-works/.
+  Static HTML in the download page's style, no script. A guide to the sample, the pad,
+  the sequencer and its parameter locks. The technical write-up is docs/ARCHITECTURE.md
+  in the source repository.
 -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>How ADNS SPACE works: a Web Audio sampler and step sequencer</title>
-  <meta name="description" content="How a Mac sampler with an arp and a step sequencer is built: lookahead scheduling, the Web Audio graph, AudioWorklets, modulation and exact re-renders of takes." />
+  <title>How ADNS SPACE works: pad, sequencer and locks</title>
+  <meta name="description" content="ADNS SPACE is a Mac app. Load a sample, play it on the X-Y pad, and lock any knob on a step of the 64-step sequencer. Record a take and re-render it later." />
   <link rel="canonical" href="https://adnsaudio.com/space/how-it-works/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="ADNS Audio" />
   <meta property="og:url" content="https://adnsaudio.com/space/how-it-works/" />
-  <meta property="og:title" content="How ADNS SPACE works" />
-  <meta property="og:description" content="The architecture of a sampler and step sequencer built with TypeScript, React, the Web Audio API and Electron." />
+  <meta property="og:title" content="How to use ADNS SPACE" />
+  <meta property="og:description" content="ADNS SPACE is a Mac app. Load a sample, play it on the X-Y pad, and lock any knob on a step of the 64-step sequencer. Record a take and re-render it later." />
   <meta property="og:image" content="https://adnsaudio.com/assets/screenshot.jpg" />
   <meta property="og:image:width" content="1400" />
   <meta property="og:image:height" content="780" />
@@ -26,8 +27,8 @@
   {
     "@context": "https://schema.org",
     "@type": "TechArticle",
-    "headline": "How ADNS SPACE works: a Web Audio sampler and step sequencer",
-    "description": "How a Mac sampler with an arp and a step sequencer is built: lookahead scheduling, the Web Audio graph, AudioWorklets, modulation and exact re-renders of takes.",
+    "headline": "How ADNS SPACE works: pad, sequencer and locks",
+    "description": "ADNS SPACE is a Mac app. Load a sample, play it on the X-Y pad, and lock any knob on a step of the 64-step sequencer. Record a take and re-render it later.",
     "url": "https://adnsaudio.com/space/how-it-works/",
     "image": "https://adnsaudio.com/assets/screenshot.jpg",
     "about": { "@type": "SoftwareApplication", "name": "ADNS SPACE", "url": "https://adnsaudio.com/space/", "operatingSystem": "macOS 13 or later", "applicationCategory": "MultimediaApplication" },
@@ -136,250 +137,104 @@
       <img src="/assets/icon.png" alt="" width="64" height="64" />
       <div>
         <p class="brand">ADNS SPACE</p>
-        <p class="kicker mono">How it's built</p>
+        <p class="kicker mono">How to use it</p>
       </div>
       <a class="back" href="../">Download page</a>
     </header>
 
     <article>
 <h1 id="how-adns-space-works">How ADNS SPACE works</h1>
-<p>ADNS SPACE is a one-shot sampler you play on an X-Y pad. You load a short sample, and an arpeggiator plays it in your key and scale while you drag. The sound runs through ten effects you can put in any order and a Saturator at the end. Six LFOs and two envelopes move the knobs, and a 64-step sequencer can lock any knob on any step. Everything you play is recorded as audio and as automation, so a performance can be re-rendered later with a different sample, key or scale.</p>
-<p>It runs in the browser and as a Mac app. There is no server and no account. It is built with TypeScript, React, Zustand and the Web Audio API, with AudioWorklets for the effects that need per-sample code, and Electron for the Mac app.</p>
-<p>This page explains how the parts fit together:</p>
+<p>ADNS SPACE is a one-shot sampler. You load a short sample and play it on an X-Y pad. An arpeggiator plays that sample in your key and scale while you drag. The sound runs through ten effects you can put in any order, and a Saturator that always comes last. Six LFOs and two envelopes move the knobs. A sequencer of up to 64 steps plays its own notes, and any step can lock a knob or a switch to its own value. Rec saves what you play as audio and as automation, so a performance can be played again later with a different sample, key or scale.</p>
+<p>It is a Mac app, for macOS 13 or later. There is no server and no account. Everything stays on your computer.</p>
+<p>This page is a guide to the parts:</p>
 <ol>
-<li><a href="#1-two-threads-two-clocks">Two threads, two clocks</a></li>
-<li><a href="#2-the-lookahead-note-scheduler">The lookahead note scheduler</a></li>
-<li><a href="#3-the-audio-graph-and-the-effect-order">The audio graph and the effect order</a></li>
-<li><a href="#4-audioworklets">AudioWorklets</a></li>
-<li><a href="#5-the-store-and-modulation">The store and modulation</a></li>
-<li><a href="#6-takes-recording-and-exact-re-render">Takes: recording and exact re-render</a></li>
-<li><a href="#7-the-mac-app-electron-updates-and-releases">The Mac app: Electron, updates and releases</a></li>
-<li><a href="#8-how-it-is-tested">How it is tested</a></li>
+<li><a href="#1-the-sample">The sample</a></li>
+<li><a href="#2-the-x-y-pad-and-the-arp">The X-Y pad and the arp</a></li>
+<li><a href="#3-the-sequencer-and-parameter-locks">The sequencer and parameter locks</a></li>
+<li><a href="#4-the-effects">The effects</a></li>
+<li><a href="#5-lfos-and-envelopes">LFOs and envelopes</a></li>
+<li><a href="#6-takes-record-and-re-render">Takes: record and re-render</a></li>
+<li><a href="#7-the-top-bar">The top bar</a></li>
 </ol>
 <hr>
-<h2 id="1-two-threads-two-clocks">1. Two threads, two clocks</h2>
-<p>The app has two threads and two clocks.</p>
-<pre class="diagram"><code> MAIN THREAD (JavaScript, can stall)                AUDIO THREAD (real time)
- ──────────────────────────────────                 ────────────────────────
- React UI ──► Zustand store ◄── arp, sequencer        Web Audio nodes
-                   │            LFOs, envelopes        AudioWorklet processors
-                   │            recorder                (grain, shifter, phaser,
-                   ▼                                     auto pan, corpus, recorder)
-            engine.apply(params) ─────────────────────► AudioParams, port messages
-            engine.trigger(time) ─────────────────────► note starts at exactly `time`
-
- clock: setInterval / setTimeout                     clock: AudioContext.currentTime
-        (jitters by many ms)                                 (sample-accurate)</code></pre>
-<p>JavaScript timers are late whenever the main thread is busy drawing, garbage-collecting or handling input. The audio clock never is. So the rule throughout the code is: <strong>timers decide <em>when to look</em>, the audio clock decides <em>when things happen</em></strong>. Every note, step and lock carries an <code>AudioContext</code> timestamp. The LFOs, envelopes and recorder all measure time on the audio clock too, which is also what makes a re-render repeatable (section 6).</p>
-<p>The engine, arpeggiator, sequencer, LFOs and recorder are plain modules: module state plus one exported object, no classes. The only classes are the AudioWorklet processors, because the Web Audio API requires <code>class … extends AudioWorkletProcessor</code>.</p>
+<h2 id="1-the-sample">1. The sample</h2>
+<p>Drop an audio file on the window, or press <strong>Load</strong>. The first 3 seconds are kept.</p>
+<p>Drag inside the waveform and the nearest handle moves. The dashed ramps are short fades at each end of the trim. <strong>Rev</strong> reverses the sample. <strong>Norm</strong> brings its peak to −1 dBFS. A white playhead runs across the waveform on every note. Under the name, the length is the part you kept. A trimmed sample reads like <strong>0.55 s of 0.90 s</strong>.</p>
+<p><strong>Root</strong> is the pitch of the sample, in octave 4. It starts at C. Set it to the note the sample actually is, and the arp plays that sample in tune: a higher note on the pad plays the sample faster and brighter, the way a sampler does.</p>
+<p>Three readouts name different things. <strong>Root</strong> is the sample. <strong>Key</strong> and <strong>Scale</strong> on the arp name the notes the pad and the sequencer use, and they are the key and scale written into a take's file name. The corner of the pad shows the chord under the cursor, which changes as you drag.</p>
 <hr>
-<h2 id="2-the-lookahead-note-scheduler">2. The lookahead note scheduler</h2>
-<p class="files"><code>src/audio/arp.ts</code> and <code>src/audio/seq.ts</code></p>
-<p>Starting each note from a timer callback would make the rhythm wobble with every hiccup on the main thread. Instead both the arpeggiator and the sequencer use the classic Web Audio <em>lookahead</em> pattern:</p>
+<h2 id="2-the-x-y-pad-and-the-arp">2. The X-Y pad and the arp</h2>
+<p>Left to right picks the note in the chosen key and scale. The vertical lines are the notes, labelled along the bottom. Bottom to top picks the speed: 1/4, 1/8, 1/8T, 1/16, 1/16T, 1/32. The first note plays as soon as you touch the pad. Letting go stops it, unless <strong>Hold</strong> is on. Hold sits at the top of the pad. With it on, the arp keeps going after you lift your hand. The top right shows the chord or note, the speed and the pattern.</p>
 <ul>
-<li>a timer runs every <strong>20 ms</strong>;</li>
-<li>on each run it schedules every note that falls within the next <strong>100 ms</strong>, each at its exact audio time;</li>
-<li>a running <code>gridTime</code> holds where the next note belongs on the grid, so timing errors never accumulate.</li>
+<li><strong>Scale:</strong> Major, Minor, Minor Pent, Major Pent, Dorian, Phrygian, Harm Minor, Chromatic. <strong>Key:</strong> C to B.</li>
+<li><strong>Octaves,</strong> from 1 to 4, sets how wide the pad is.</li>
+<li><strong>Pattern:</strong> Repeat plays the note under the cursor. Up, Down, Up-Dn and Rnd walk a chord built on that note. <strong>Chord</strong> is a triad or a 7th.</li>
+<li><strong>Gate</strong> is the note length, from 0 to 200% of a step. A full step, 100%, is the middle of the knob. At the very top the label is <strong>Ring</strong>: the sample rings until the next note cuts it.</li>
+<li><strong>Swing,</strong> from 0 to 60%, delays every second 1/8 or 1/16 note.</li>
 </ul>
-<pre class="diagram"><code>audio time ──────────────────────────────────────────────────────────────►
-                now                      now + 100 ms (horizon)
-                 │◄──────── lookahead ────────►│
- grid:     ·     │  ♪         ♪         ♪      │  ♪         ♪
-                 │  └─ scheduled on this tick ─┘  └─ next ticks
- timer:    ▲     ▲     ▲     ▲     ▲   (every 20 ms, may be late; the notes are not)</code></pre>
-<p>As long as a timer is never more than about 80 ms late, nothing is lost. A late timer only means notes are handed to the audio thread a little closer to their time.</p>
-<p>Each note reads the settings <strong>at the moment it is scheduled</strong>, through the same &quot;effective&quot; values the effects hear (section 5). So an LFO on the pad&#39;s X axis plays a melody, and an LFO on Gate or Swing changes the next note. Swing delays every second 1/8 or 1/16 note by a fraction of its length. Gate turns into a fade-out time passed with the note. The first note is placed 5 ms after the pad is touched, so it plays straight away instead of waiting for the next grid line.</p>
-<p><strong>The sequencer&#39;s step locks.</strong> A step can hold its own value for any effect knob. The note is scheduled up to 100 ms early, but the knob must change exactly when the step starts, not when it was scheduled. Each scheduled step therefore gets:</p>
+<p>Gate and Swing apply to the sequencer as well. Notes are mono: each new note cuts off the one that is still sounding.</p>
+<hr>
+<h2 id="3-the-sequencer-and-parameter-locks">3. The sequencer and parameter locks</h2>
+<p>The sequencer sits at the bottom right. It has up to 64 steps, 16 on screen at a time, and it opens at 16. Page buttons <strong>1</strong> to <strong>4</strong> switch pages, and the page that is playing lights up. <strong>▶</strong> and <strong>■</strong> play and stop. The menu on the left sets the step length, from 1/4 to 1/32, starting at 1/16. The menu on the right sets the length of the pattern: 16, 32, 48 or 64 steps.</p>
+<p>Click a step to switch it on or off. A step you switch on takes the note the pad is on, so put the pad on a note and then click the steps you want. Drag a step up or down, or scroll on it, to change its note inside the key and scale. Press and slide across steps to switch a row of them, the way you would run a finger along piano keys.</p>
+<p>You can play the pad while the sequence runs. The two share one voice, so a pad note and a step cut each other off.</p>
+<p><strong>Lock</strong> gives a step its own setting, the way a parameter lock does on a step sequencer. Press <strong>Lock</strong>, then click a step. Turning an effect knob, or clicking an effect switch, writes that value onto the step. The knob or switch shows a small square, and the step shows a dot once it holds anything. A lock can be the on/off of an effect, the Saturator included, or a switch inside an effect: each Corpus resonator's On, each Filter delay line's On and Filt, and Inv on the Phaser-Flanger and the Auto pan. A Corpus or Filter delay tab lights up for the selected step's On.</p>
 <ol>
-<li>a timer set for the moment the step starts, which hands its locks to the modulation layer;</li>
-<li>a fallback on every 20 ms tick: the latest step whose audio time has passed is applied, in case that timer fired late.</li>
+<li>Hold <strong>Command</strong> (Ctrl on a keyboard without Command) and click more steps to select them together. A lock or an LFO map is written to every selected step. Command-click a selected step to drop it from the selection.</li>
+<li>Press <strong>Lock</strong> again, or <strong>Esc</strong>, to leave.</li>
 </ol>
-<p>Steps only ever move forward (a counter of the last step applied), so an early timer and a later tick never undo each other.</p>
+<p>A lock takes effect at the start of its step, together with the note, and lasts until the next step starts. It applies on a step that is switched off too, so a silent step can still open an effect or move a knob for its own length. An effect switched on by a lock plays on that step only. The other steps, and the X-Y pad, keep the on/off you set by hand.</p>
+<p>On the Filter delay, Space, Grain delay and Corpus, a lock on the on/off, on Mix, or on a line's Vol works like a send. It sets how much of that step's sound goes into the effect. The effect's output stays open while the effect is on, or while any step of the pattern locks it, so the echo, the reverb tail or the resonance keeps ringing after the step has ended. Locks on the sound of the effect itself, such as Time, Feedback, Freq, Pre-delay or Tune, last for that step only. With the effect on, turning Mix or Vol down leaves what is already inside it to ring out.</p>
+<p>Space Size, Decay and Damp stay on the values you set. Changing them rebuilds the reverb, so a step keeps those three where you left them.</p>
+<p>Double-click a knob while Lock is on to remove that knob's lock from the selected steps. <strong>Delete</strong> or <strong>Backspace</strong> clears the locks on every selected step. <strong>Clear Locks</strong> asks first, then clears the locks on every step and leaves the notes where they are. <strong>Clear Steps</strong> asks first, then switches every step off and sets each note to the key note, the one at or below the sample's root. The locks stay.</p>
+<p>An LFO can live on steps. Press <strong>Map</strong> on the LFO while Lock is on and steps are selected, then click a knob. That LFO moves the knob only while those steps play, and it swings around the locked value when the step has one. The LFO panel shows it as <strong>→ Knob on N steps</strong>. Its <strong>×</strong> removes that map from every step, and removes a live map of the same LFO as well. Double-clicking the knob in Lock removes the knob's lock and that knob's LFO map from the selected steps. Delete, Backspace and Clear Locks remove the map along with the other locks on those steps. A map you make with Lock off stays a live map, on every note. Envelopes stay live on every note, including while the sequencer plays.</p>
 <hr>
-<h2 id="3-the-audio-graph-and-the-effect-order">3. The audio graph and the effect order</h2>
-<p class="files"><code>src/audio/engine.ts</code>, <code>src/audio/fx/</code></p>
-<pre class="diagram"><code> sample ─► voice ─► voiceBus ─► [ 10 effects, in the order of the strips ] ─► fade
-                                 Filter ─► EQ 1 ─► Shifter ─► Phaser-Flanger ─► Grain delay
-                                 ─► Space ─► Auto pan ─► EQ 2 ─► Corpus ─► Filter delay
-                                 (the starting order; drag a strip to change it)
-
- fade ─► Saturator (always last) ─► safety limiter (-0.3 dB) ─┬─► VOL (main volume) ─► speakers
-                                                               ├─► level meter
-                                                               └─► recorder ─► silent gain ─► speakers</code></pre>
-<p><strong>The voice.</strong> Like a classic hardware sampler in mono mode, one note sounds at a time. A note is an <code>AudioBufferSourceNode</code> whose playback rate is <code>2^((note − root) / 12)</code>, so higher notes are shorter and brighter, as on a real sampler. A new note fades the previous one out over 4 ms at its own start time (&quot;choke&quot;), so notes cut each other off without clicks. A gate shorter than the sample schedules an 8 ms fade-out. A second gain node per voice follows an envelope when one is shaping loudness, kept separate from the choke.</p>
-<p><strong>Every effect has the same shape.</strong> An effect is a factory function that returns <code>input</code>, <code>output</code> and <code>apply(params)</code>. Most are built on a shared &quot;slot&quot;: a dry path, a wet path and an equal-power Mix between them. Off means dry only, so an effect that is switched off costs nothing in sound. Every parameter change ramps over 15 ms (<code>setTargetAtTime</code>), so knob turns and LFO movement never click.</p>
-<p><strong>Reordering.</strong> The effects can be dragged into any order. To rewire the graph while sound is playing, the engine fades a gain stage to silence over 12 ms, disconnects every effect output, reconnects them in the new order and fades back in. The order is a list of effect ids. Anything read back from storage or from an old take goes through <code>normalizeOrder()</code>: unknown or repeated ids are dropped and missing ones are put back in their default place. That way an effect added in a later version still appears in an order saved by an older one.</p>
-<p><strong>The end of the chain</strong> does not move. The Saturator is a <code>WaveShaperNode</code>, 4× oversampled to keep aliasing down, with a curve built in code (soft clipping, a cubic term for third harmonics, ripples for folded tones and a gate near zero). It is only rebuilt when one of the knobs that shape it changes. After it, a <code>DynamicsCompressorNode</code> at -0.3 dB, 20:1, acts as a hidden safety limiter. The recorder hangs off the limiter through a gain set to 0: an AudioWorklet only runs while something pulls on its output. The main volume (VOL) is a gain between the limiter and the speakers, so it only changes what you hear: the level meter and the recorder take the full level from the limiter. A saved take plays through VOL too.</p>
-<p><strong>The reverb</strong> is a <code>ConvolverNode</code> with an impulse response generated in code from a fixed seed, so the same settings always give the same reverb. Generating it takes time, so rebuilds wait until Size, Decay or Damp have stopped moving for 120 ms. That is also why those three knobs can&#39;t be mapped or locked.</p>
-<hr>
-<h2 id="4-audioworklets">4. AudioWorklets</h2>
-<p class="files"><code>src/audio/worklets/</code></p>
-<p>Built-in Web Audio nodes cover filters, delays, gains and convolution. Anything that needs its own per-sample code runs in an AudioWorklet processor on the audio thread:</p>
-<div class="table"><table>
-<thead>
-<tr>
-<th>Processor</th>
-<th>What it does</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Grain delay</td>
-<td>A 4-second circular buffer. Hann-windowed grains with 2× overlap read it back delayed, pitched and scattered. The reverb&#39;s shimmer reuses it at +12 semitones.</td>
-</tr>
-<tr>
-<td>Shifter</td>
-<td>Pitch mode: a dual-tap delay-line shifter with crossfaded windows. Freq mode: single-sideband frequency shifting through a 90° all-pass network (I/Q). Ring mode: a ring modulator. A feedback delay sends the result back in for spirals.</td>
-</tr>
-<tr>
-<td>Phaser-Flanger</td>
-<td>Up to 84 first-order all-pass stages with coefficients recomputed every 16 samples, or a swept fractional delay for Flanger and Doubler.</td>
-</tr>
-<tr>
-<td>Auto pan</td>
-<td>Left and right gains computed for every sample, so even fast square waves stay exact.</td>
-</tr>
-<tr>
-<td>Corpus</td>
-<td>Modal synthesis: up to 16 band-pass resonators per channel, one per partial of the chosen object (beam, marimba, string, membrane, plate, pipe, tube). Each resonator&#39;s Q is set so it rings for the requested decay time.</td>
-</tr>
-<tr>
-<td>Recorder</td>
-<td>Copies the limiter&#39;s output into 4096-frame blocks and <em>transfers</em> them to the main thread (no copy).</td>
-</tr>
+<h2 id="4-the-effects">4. The effects</h2>
+<p>The effects are strips in the order the sound passes through them: left to right, then the bottom row. Drag a strip by its grip, the dots at the top left, to move it. A bright line shows where it will land, and the sound follows when you let go. With a grip selected, the arrow keys move that strip one place. Esc while dragging puts it back. The order is remembered, and each take keeps the order it started with.</p>
+<p>Each effect has an on/off. Off leaves the dry sound. The <strong>Saturator</strong> is the bar along the bottom, labelled OUT. It always comes last, after whatever order you give the ten strips.</p>
+<div class="table">
+<table>
+<thead><tr><th>Module</th><th>What you turn</th></tr></thead>
+<tbody>
+<tr><td>Filter</td><td>LP, HP, BP or notch, 12 or 24 dB slope, Cutoff, Reso, Drive, Crush, an envelope that opens the filter on every note, Mix</td></tr>
+<tr><td>EQ 1</td><td>Low shelf, mid bell and high shelf, each with its own gain and frequency. The mid band has Q</td></tr>
+<tr><td>Shifter</td><td>Pitch, Freq or Ring, synced or in milliseconds, Shift, Fine, Spread, Window, Delay, Feedback, Tone, Mix</td></tr>
+<tr><td>Phaser-Flanger</td><td>Phaser, Flanger or Doubler, synced or in Hz, Inv, Rate, Amount, Phase, Center or Time, Notches, Spread, Feedback, Mix</td></tr>
+<tr><td>Grain delay</td><td>Synced or in milliseconds, Time, Feedback, grain Size, Pitch ±12 st, Spray, Mix</td></tr>
+<tr><td>Space</td><td>Size, Decay, Pre-delay, Damp, Shimmer (an octave-up tail), Mix</td></tr>
+<tr><td>Auto pan</td><td>Sine, Triangle, Saw or Random, synced or in Hz, Inv, Rate, Amount, Phase, Spin, Offset, Shape</td></tr>
+<tr><td>EQ 2</td><td>The same three bands as EQ 1. It starts off</td></tr>
+<tr><td>Corpus</td><td>Three resonators on tabs 1 to 3. Each has On, an object (Beam, Marimba, String, Membrane, Plate, Pipe, Tube), Tune, Decay, Material, Bright, Inharm, Radius, Opening, Hit, Spread, Gain, Mix</td></tr>
+<tr><td>Filter delay</td><td>Three echo lines on tabs L, L+R and R. Each has On, sync or milliseconds, Filt, Time, Feedback, Freq, Width, Pan, Volume. Dry is shared</td></tr>
+<tr><td>Saturator</td><td>Drive, Lin, Curve, Damp, Depth, Period, Output, Dry/Wet</td></tr>
 </tbody>
-</table></div>
-<p>How they talk to the app:</p>
-<ul>
-<li><strong>Settings arrive as messages.</strong> Each effect turns its knobs into real units (Hz, seconds, cents) and posts them over the worklet&#39;s port only when they actually changed, so a 10 ms LFO tick doesn&#39;t flood the audio thread.</li>
-<li><strong>Time comes from the audio thread.</strong> A processor&#39;s LFO phase is computed from the worklet&#39;s own <code>currentTime</code> minus a start time (<code>epoch</code> / <code>resetAt</code>) the app sends when a take starts. It is never counted from the moment the processor happened to be created.</li>
-<li><strong>Randomness is seeded.</strong> Grain spray and the random auto-pan shape use a seeded generator or hash, never <code>Math.random()</code>.</li>
-<li><strong>Memory can be wiped.</strong> A <code>clear</code> message empties delay lines and filter state, so a re-render starts from silence instead of the last performance&#39;s tail.</li>
-</ul>
-<p>The last two points are what make re-renders exact (section 6).</p>
-<p>Two practical details: the build keeps worklet files as real files instead of inlining them as <code>data:</code> URLs, which <code>addModule()</code> does not reliably accept. And the Mac app has to serve them with a JavaScript content type, or <code>addModule()</code> refuses them.</p>
+</table>
+</div>
+<p>Knobs drag up to increase and down to decrease. Hold <strong>Shift</strong> for fine control. Double-click resets a knob. The scroll wheel and the arrow keys work too. In Lock, a double-click clears that knob's lock on the selected steps, as section 3 describes.</p>
 <hr>
-<h2 id="5-the-store-and-modulation">5. The store and modulation</h2>
-<p class="files"><code>src/state/store.ts</code>, <code>src/state/params.ts</code>, <code>src/state/history.ts</code>, <code>src/audio/lfo/index.ts</code>, <code>src/audio/env.ts</code></p>
-<p><strong>One flat record of numbers.</strong> Every control in the app, from every knob, selector and switch to the sequencer&#39;s Play button and each LFO&#39;s mapping, is a number in one <code>Record&lt;string, number&gt;</code> in a single Zustand store. Knobs are always 0 to 1. A shared <code>map</code> table turns that into Hz, dB, ms and so on, and the engine and the on-screen labels both use it, so they never disagree. Because everything is a number in one place:</p>
-<ul>
-<li>React components subscribe to the slices they draw and re-render only when those change;</li>
-<li>audio modules subscribe outside React (<code>useStore.subscribe</code>, <code>getState()</code>);</li>
-<li>the recorder records <em>any</em> change by subscribing once (section 6);</li>
-<li>an LFO mapping is just a number (an index into a target list), so it is recorded and replayed like a knob.</li>
-</ul>
-<p>The store is updated immutably, so &quot;did anything change?&quot; is a single reference comparison.</p>
-<p><strong>Base values and effective values.</strong> The store holds what you set: the values the knobs show and the recorder records. What the effects hear is computed from it in layers, every time something changes and every 10 ms while anything moves:</p>
-<pre class="diagram"><code> store (your knobs) ──► step knob locks ──► LFOs ──► envelopes ──► effective params
-                        (replace the knob    (swing   (add on top)     │
-                         for that step)       around                   ├─► arp &amp; sequencer (next note)
-                                              it)                      └─► engine.apply() ─► effects
-                                                                             ▲
-                         effect on/off locks ── only while that step is the voice</code></pre>
-<ul>
-<li><strong>Step locks</strong> replace a knob&#39;s value for the step that is playing. An LFO mapped to a locked knob swings around the lock instead of the knob.</li>
-<li><strong>LFOs</strong> add <code>wave × depth + offset</code>, scaled and clamped to the LFO&#39;s Min and Max. The 10 ms ticker only runs while at least one LFO or envelope is actually driving something.</li>
-<li><strong>Envelopes</strong> add <code>level × amount</code> on top. An envelope that drives no knob shapes the note&#39;s loudness instead.</li>
-<li><strong>Effect on/off locks</strong> are kept out of that mix on purpose. A step can switch an effect on just for itself, but the pad&#39;s notes and the unlocked steps keep the switch as you left it. So the engine only adds those switches while a sequencer step is the sound playing, and drops them again when a pad note takes over.</li>
-<li><strong>Locks on effects with a tail work like sends.</strong> A lock lasts one step, but a delay&#39;s echo comes out a delay time later, and a reverb or Corpus keeps ringing. So on the Filter delay, Space, Grain delay and Corpus, the on/off, Mix and Vol set a send <em>into</em> the effect, and the effect&#39;s return stays open while it is on or any step of the pattern locks it. The locked step&#39;s sound goes in at its locked level, and its echoes ring out after the step. Knobs that shape the effect itself (time, feedback, tone) still change for one step only: making them per-sound would need an effect instance per step.</li>
-</ul>
-<p><strong>Modulation is a function of time, not of state.</strong> An LFO doesn&#39;t keep a running phase. Its phase is computed from the time since a reference point: the start of the take (Free), the last pad touch (Touch) or the last note (Note), or the last Reset press if that is later. Its random shapes take their values from a hash of <code>(seed, LFO, cycle)</code>. Envelopes are a pure ADSR function of the note&#39;s start and end times. Given the same seed and the same timeline, the modulation comes out identical, which section 6 relies on.</p>
-<p><strong>Saved takes depend on the order of the target list.</strong> Takes store LFO mappings as indices into the target list. New targets are therefore only ever appended, and removed effects keep their slots. A test pins the full list so a reorder can&#39;t slip in and silently remap old takes.</p>
-<p><strong>Undo and Redo come almost for free.</strong> Because every setting is in the store and the store is immutable, the history module is one more subscriber:</p>
-<ul>
-<li>The first change of a gesture keeps a reference to the state just before it. The gesture ends on mouse-up, on the next mouse-down, or 400 ms after the last change when no button is held: keys, the wheel, a pick from a menu, or a click whose change lands after mouse-up. Then the two states are compared, and only the differences are kept: each changed param as <code>[before, after]</code>, and each changed sequencer step as a pair of references, since steps are immutable objects too. So a whole knob drag is one step, and a step costs a few numbers, which is why the history can keep 10,000 of them.</li>
-<li>Undo writes the &quot;before&quot; side back in one store update, and Redo the &quot;after&quot; side. They are ordinary changes, so the recorder logs them like any other.</li>
-<li>Playback switches (sequencer Play, arp Hold) and the LFO restart counters are left out, and so is anything a re-render writes while it loads and replays a take. The effect order, takes and the sample sit outside <code>params</code> and <code>steps</code>, the only two parts the history compares, so they are never undone.</li>
-</ul>
+<h2 id="5-lfos-and-envelopes">5. LFOs and envelopes</h2>
+<p>Six LFOs sit in the column next to the pad, on tabs <strong>1</strong> to <strong>6</strong>. A light on a tab means that LFO is moving something. Each LFO drives one target.</p>
+<p>Press <strong>Map</strong>. Knobs an LFO can drive get a glowing dashed outline, and the pad offers <strong>Pad X · pitch</strong> and <strong>Pad Y · rate</strong>. Click one. The panel shows where it went, for example <strong>→ Filter · Cutoff</strong>. <strong>×</strong> unmaps it. Esc, or Map again, leaves map mode. Mapping a target another LFO already drives moves it to this LFO.</p>
+<p>A mapped knob shows the LFO's number, a ring for the range it sweeps, and a dot for the live value. Turning the knob moves the centre the LFO swings around. With an LFO on Pad X or Pad Y, the cursor moves on its own, and a small circle shows where your hand is.</p>
+<p>The LFOs keep their own time, so they drift apart. <strong>Reset</strong> restarts the one you are looking at. <strong>All</strong> restarts the six together. Those resets are recorded in a take and replay at the same moment.</p>
+<p>Shape runs from sine through square to Random and Binary. Retrigger is <strong>Free</strong> (it keeps running), <strong>Touch</strong> (it restarts when you press the pad) or <strong>Note</strong> (it restarts on every arp note). Rate is in hertz, from 0.01 to 40, or synced to the tempo, from 8 bars down to 1/32. Depth, Offset, Phase, Jitter, Smooth, Min and Max shape the swing. <strong>Hold</strong> freezes the current value. Space Size, Decay and Damp stay unmapped, for the same reason a step leaves them alone: changing them rebuilds the reverb.</p>
+<p>In Lock, with steps selected, Map stores the LFO on those steps instead of as a live map. Section 3 covers how that map shows up, and how × and a double-click remove it.</p>
+<p>Two envelopes sit under the LFOs, on tabs <strong>1</strong> and <strong>2</strong>. Attack rises, Decay falls to Sustain, and Release lets go. <strong>Amount</strong> sets how far and which way, from −100% to +100%. They start at 5 ms, 180 ms, 40%, 300 ms and +50%. <strong>Note</strong> restarts the envelope on every arp or sequencer note and lets go when the note ends. <strong>Touch</strong> starts it when you press the pad and lets go when you lift. With Hold on, Touch stays at Sustain.</p>
+<p>Map, then click up to four knobs. Click a mapped knob again to remove it. A knob it drives shows <strong>E1</strong> or <strong>E2</strong>. Both envelopes start off, and mapping a knob switches that envelope on. An envelope that is on and drives no knob shapes the loudness of each note instead. Where an LFO is also on that knob, the envelope adds on top. The picture shows the shape, with a dashed line at the live level.</p>
 <hr>
-<h2 id="6-takes-recording-and-exact-re-render">6. Takes: recording and exact re-render</h2>
-<p class="files"><code>src/audio/recording.ts</code>, <code>src/storage/db.ts</code></p>
-<p>A take is the audio plus everything needed to play the performance again:</p>
-<div class="table"><table>
-<thead>
-<tr>
-<th>Part</th>
-<th>What it is</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Audio</td>
-<td>24-bit stereo WAV from the recorder worklet. Trailing silence is trimmed, leaving 100 ms.</td>
-</tr>
-<tr>
-<td>Snapshot</td>
-<td>The full settings record at the first touch.</td>
-</tr>
-<tr>
-<td>Event log</td>
-<td>Every settings change <code>{t, key, value}</code> and every pad move <code>{t, x, y, touch}</code>, with <code>t</code> in seconds of audio time since the start.</td>
-</tr>
-<tr>
-<td>Seed</td>
-<td>One random number that every random part of the sound is derived from.</td>
-</tr>
-<tr>
-<td>Stop time</td>
-<td>When Stop was pressed. The tails after it ring out but aren&#39;t part of the performance.</td>
-</tr>
-<tr>
-<td>Pattern and effect order</td>
-<td>Copies of the sequencer steps and the effect order at the start.</td>
-</tr>
-</tbody>
-</table></div>
-<p><strong>Recording.</strong> Rec arms the recorder, and the next pad touch (or ▶ on the sequencer) starts the take. Pad gestures from your mouse and from a replay go through the same function, which starts the recorder <em>before</em> the pad is marked as touched, so the first note is always in the take. At the start the recorder:</p>
-<ol>
-<li>picks a seed and notes the audio time <code>t0</code>;</li>
-<li>sends that seed and <code>t0</code> to the arpeggiator&#39;s random pattern, the grain and auto-pan worklets, the shifter and phaser LFOs and the app&#39;s LFOs;</li>
-<li>copies the settings, the pattern and the effect order;</li>
-<li>subscribes to the store: from then on every change is timestamped on the audio clock and appended to the log.</li>
-</ol>
-<p>On Stop the arpeggiator and sequencer stop, but recording goes on until the reverb and delays have died away (0.4 s below -66 dBFS, or 30 s at most). The take is then encoded and saved to IndexedDB.</p>
-<p><strong>Re-render</strong> plays the performance again through the <em>current</em> sample, key and scale:</p>
-<ol>
-<li>Clear every effect&#39;s memory, so no tail from before leaks in.</li>
-<li>Apply the take&#39;s snapshot, except key and scale, which come from the screen. A setting added in a later version than the take gets its default, which is how the take sounded.</li>
-<li>Use the take&#39;s pattern and effect order, without touching the ones on screen.</li>
-<li>Start a new take with the <strong>same seed</strong>, so every random source restarts identically.</li>
-<li>Replay the event log on a 4 ms timer against the audio clock, through the same code paths as live input, then stop at the stored stop time.</li>
-</ol>
-<pre class="diagram"><code> saved take:   snapshot ─┐   seed ─┐   events: t=0.00 pad down (0.31, 0.62)
-                         │         │           t=0.42 filter.cutoff = 0.55
-                         ▼         ▼           t=1.10 lfo2.target = 14 …
- re-render:    apply ─► reseed every random source ─► dispatch each event when audio time ≥ t
-                                    │
-                                    └─► arp Rnd pattern, grain spray, reverb shimmer,
-                                        auto-pan wave, shifter &amp; phaser phase, LFO shapes &amp; jitter</code></pre>
-<p>Every timestamp, from the log to the LFO phases and the worklets&#39; epochs, is relative to the take&#39;s start on the audio clock, and nothing uses unseeded randomness. A replay only has to recreate the inputs: the scheduler, the modulation and the DSP then produce the same notes at the same offsets. In testing, a re-render with the same settings matched the original take with an envelope correlation above 0.999. The new take is saved as a take of its own.</p>
+<h2 id="6-takes-record-and-re-render">6. Takes: record and re-render</h2>
+<p><strong>Rec</strong> arms the recorder once a sample is loaded. The take starts on your next pad touch, or when you press play on the sequencer. Pressing Rec while the sequencer is already playing restarts it from step 1 and records from there.</p>
+<p>Press Rec again to stop. The arp and the sequencer stop, and the reverb and delays ring out until they fall silent. The take then saves itself.</p>
+<p>A take is a 24-bit WAV plus the performance: every pad move, knob turn, button and LFO change, and a copy of the sequencer pattern and the effect order from the moment the take started. Re-render plays that saved pattern and order. The log keeps the moves, knobs, buttons and LFO changes. Step edits made while recording stay out of it. The <strong>⟳</strong> button plays the performance again, in real time, through the sample, key and scale on screen now, and saves the result as a new take. Random parts of the sound, such as an Rnd pattern, grain spray and a random LFO, restart from the seed stored with the take, so the same settings come out the same.</p>
+<p>Each row shows the length, key, scale and BPM, then a small waveform. Hover the details for the sample and its file name. The file name uses the arp's key and scale, as in <strong>adns-space_kick_124bpm_Amin_take03.wav</strong>. While a take plays, a playhead runs across its waveform, and clicking the waveform starts from that point. <strong>▶</strong> plays the WAV. <strong>⤓</strong> downloads it. <strong>✕</strong> deletes it, and the second click confirms.</p>
+<p><strong>VOL</strong>, in the Out box, is the volume of your speakers, from 0 dB down to off. Double-click returns it to 0 dB. A take you play back goes through VOL too. The saved file, the download and the Out meter stay at the full level from before VOL. The app remembers VOL. Undo and Init keep it where it is.</p>
 <hr>
-<h2 id="7-the-mac-app-electron-updates-and-releases">7. The Mac app: Electron, updates and releases</h2>
-<p class="files"><code>electron/</code>, <code>.github/workflows/release.yml</code></p>
-<p><strong>The same web app inside a locked-down window.</strong> The Mac app loads the same build as the browser version. It is served under a custom privileged scheme, <code>app://local/</code>, rather than <code>file://</code>, so the page has a real origin: IndexedDB persists, worklets load with <code>addModule()</code> and absolute asset paths work. A small pure function maps each address to a file and refuses anything that would escape the build folder (<code>../</code>, the same percent-encoded, null bytes). The page runs sandboxed with context isolation and no Node access. Its only bridge to the Mac side is a preload script that exposes a fixed set of update calls. Links to other sites open in the default browser, and leaving the app is blocked.</p>
-<p>The window has one fixed size, 1400 × 780, like a plugin window, which fits the 13-inch MacBook Air with the menu bar and Dock. Only on a screen too small for that does it shrink, keeping its shape. There is no title bar: close and minimize sit in the app&#39;s own top bar. Electron can&#39;t hide only the green zoom button, so a tiny native addon (Objective-C, Node-API) does that. <code>--smoke-test</code> opens the app hidden, waits until the audio engine reports that every worklet has loaded, and exits 0 or 1. The release pipeline uses it on the packaged app.</p>
-<p><strong>Self-updates.</strong> The app checks the public releases 5 seconds after start, every 10 minutes and when you come back to it. If a newer zip is there, a banner offers Update, Later or Skip this version. An update is only installed after these checks:</p>
-<pre class="diagram"><code> GitHub releases API ─► newest ADNS-SPACE-&lt;x.y.z&gt;-mac.zip above the running version (not skipped)
-   ─► can this copy replace itself? (not on the disk image, not translocated, folder writable)
-   ─► download to a temp folder ─► full size? ─► unzip (ditto)
-   ─► codesign --verify --deep --strict, with the requirement
-      "anchor apple generic and certificate leaf[subject.OU] = &lt;the running app's team&gt;"
-   ─► is its version the one announced?
-   ─► Restart now: a small detached script waits for the app to quit, moves the old app aside,
-      moves the new one in (restoring the old one if that fails), and reopens it</code></pre>
-<p>The team requirement means a signed app only accepts an update signed by the same Apple Developer team through Apple&#39;s certificate chain. An older ad-hoc signed version accepts any valid signature, so it could update to the first signed one. All of this logic is plain functions with no Electron imports, so it is unit-tested, including the swap script.</p>
-<p><strong>Releases.</strong> Pushing a version tag starts a workflow on a macOS runner:</p>
-<pre class="diagram"><code> tag X.Y.Z ─► tag matches package.json? ─► type-check ─► unit tests ─► build
-   ─► sign with the Developer ID (keychain created for this run) ─► notarize
-   ─► verify: team, hardened runtime, stapled ticket, Gatekeeper
-   ─► start the packaged app (--smoke-test) ─► end-to-end tests against the packaged app
-   ─► notarize the disk image ─► publish to the public download repository</code></pre>
-<p>The source repository is private. Releases go to a separate public repository that only holds the downloads. The signing keychain and API key exist only for the length of the run.</p>
-<hr>
-<h2 id="8-how-it-is-tested">8. How it is tested</h2>
-<ul>
-<li><strong>Unit tests (Vitest, jsdom)</strong> sit next to the code. The schedulers, LFOs, envelopes and recorder run against a fake engine whose audio clock the test moves by hand, in step with Vitest&#39;s fake timers. So &quot;this note lands at exactly 0.6250 s&quot; and &quot;this lock applies at the start of step 5, not when it was scheduled&quot; are ordinary assertions. The real worklet files run sample by sample in Node to check, for example, that a phaser notch sits at Center and that maximum feedback stays stable. Every effect is also checked against a recording fake of Web Audio. Undo and Redo are tested gesture by gesture: a drag, a slide across steps, a typed BPM followed by a drag, a pick from a menu, and a re-render that must leave no step behind. The build runs all of them.</li>
-<li><strong>End-to-end tests (Playwright)</strong> start the real Mac app with a temporary profile and use it like a person: load a WAV, play the pad, record, re-render, download, restart. The output meter checks that sound really comes out. Separate tests run a real self-update on a packaged app, and screenshot tests compare the effect strips, the LFO and envelope panels and the Saturator bar with saved pictures.</li>
-<li><strong>CI</strong> type-checks, tests and builds every pull request. The release workflow repeats the end-to-end tests on the packaged, signed app before anything is published.</li>
-</ul>
+<h2 id="7-the-top-bar">7. The top bar</h2>
+<p><strong>Undo</strong> and <strong>Redo</strong> step through your changes. <strong>Cmd+Z</strong> and <strong>Shift+Cmd+Z</strong> do the same. A knob drag is one step, a slide across sequencer steps is one step, and Init is one step. Up to 10,000 steps are kept. Undo covers knobs, switches, LFO and envelope settings and mappings, and the sequencer's steps, notes and locks. The effect order, the takes, the sample and playback stay as they are.</p>
+<p><strong>Init</strong> resets the knobs, LFOs, envelopes, mappings and effects to their defaults. Click it twice to confirm. It keeps the loaded sample, your takes, the effect order and VOL.</p>
+<p><strong>BPM</strong> starts at 132. Drag it, type a number, or tap the tempo.</p>
+<p><strong>Out</strong> is the output level. <strong>LIM</strong> lights red while a safety limiter holds the output at −0.3 dB. VOL, described with the takes, changes what you hear. The recording stays at full level.</p>
+<p><strong>Support</strong> opens the page for supporting the developer. <strong>Feedback</strong> opens an email for a bug report. <strong>Download page</strong> opens this site.</p>
     </article>
 
     <div class="cta">

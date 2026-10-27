@@ -79,19 +79,6 @@
     .back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
     .brand { margin: 0; font-size: clamp(28px, 5vw, 40px); font-weight: 700; letter-spacing: .14em; line-height: 1.1; }
     .kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
-    .download {
-      display: inline-flex; align-items: center; gap: 12px;
-      padding: 15px 26px; border-radius: 3px;
-      background: var(--accent); color: #05060b; text-decoration: none;
-      font: 700 15px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
-    }
-    .download:hover { filter: brightness(1.08); }
-    .download:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-    .download svg { flex: none; }
-    .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 48px 0 0; }
-    .meta { color: var(--muted); font-size: 14px; }
-    .meta a { color: var(--muted); }
-
     article { max-width: 780px; margin: 40px 0 0; }
     article h1 { margin: 0; font-size: clamp(24px, 4vw, 32px); font-weight: 600; letter-spacing: .04em; line-height: 1.2; }
     article h2 {
@@ -121,12 +108,9 @@
     th { color: var(--accent); font: 400 12px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
     td:first-child { color: var(--ink); white-space: nowrap; }
 
-    footer { margin: 40px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
-    footer a { color: var(--muted); }
     @media (max-width: 560px) {
       main { padding-top: 32px; }
       header img { width: 52px; height: 52px; }
-      .download { width: 100%; justify-content: center; }
       td:first-child { white-space: normal; }
     }
   </style>
@@ -154,7 +138,6 @@
 <li><a href="#4-the-effects">The effects</a></li>
 <li><a href="#5-lfos-and-envelopes">LFOs and envelopes</a></li>
 <li><a href="#6-takes-record-and-re-render">Takes: record and re-render</a></li>
-<li><a href="#7-the-top-bar">The top bar</a></li>
 </ol>
 <hr>
 <h2 id="1-the-sample">1. The sample</h2>
@@ -191,7 +174,7 @@
 <hr>
 <h2 id="4-the-effects">4. The effects</h2>
 <p>The effects are strips in the order the sound passes through them: left to right, then the bottom row. Drag a strip by its grip, the dots at the top left, to move it. A bright line shows where it will land, and the sound follows when you let go. With a grip selected, the arrow keys move that strip one place. Esc while dragging puts it back. The order is remembered, and each take keeps the order it started with.</p>
-<p>Each effect has an on/off. Off leaves the dry sound. The <strong>Saturator</strong> is the bar along the bottom, labelled OUT. It always comes last, after whatever order you give the ten strips.</p>
+<p>Each effect has an on/off. Off leaves the dry sound. Its reset button restores its knobs, switches and selectors to their defaults as one Undo step, while keeping its on/off state, step locks, and LFO and envelope maps. The <strong>Saturator</strong> is the bar along the bottom, labelled OUT. It always comes last, after whatever order you give the ten strips.</p>
 <div class="table">
 <table>
 <thead><tr><th>Module</th><th>What you turn</th></tr></thead>
@@ -226,28 +209,10 @@
 <p><strong>Rec</strong> arms the recorder once a sample is loaded. The take starts on your next pad touch, or when you press play on the sequencer. Pressing Rec while the sequencer is already playing restarts it from step 1 and records from there.</p>
 <p>Press Rec again to stop. The arp and the sequencer stop, and the reverb and delays ring out until they fall silent. The take then saves itself.</p>
 <p>A take is a 24-bit WAV plus the performance: every pad move, knob turn, button and LFO change, and a copy of the sequencer pattern and the effect order from the moment the take started. Re-render plays that saved pattern and order. The log keeps the moves, knobs, buttons and LFO changes. Step edits made while recording stay out of it. The <strong>⟳</strong> button plays the performance again, in real time, through the sample, key and scale on screen now, and saves the result as a new take. Random parts of the sound, such as an Rnd pattern, grain spray and a random LFO, restart from the seed stored with the take, so the same settings come out the same.</p>
-<p>Each row shows the length, key, scale and BPM, then a small waveform. Hover the details for the sample and its file name. The file name uses the arp's key and scale, as in <strong>adns-space_kick_124bpm_Amin_take03.wav</strong>. While a take plays, a playhead runs across its waveform, and clicking the waveform starts from that point. <strong>▶</strong> plays the WAV. <strong>⤓</strong> downloads it. <strong>✕</strong> deletes it, and the second click confirms.</p>
+<p>Each row shows the length, key, scale and BPM, then a small waveform. Hover the details for the sample and its file name. The file name uses the arp's key and scale, as in <strong>adns-space_kick_124bpm_Amin_take03.wav</strong>. While a take plays, a playhead runs across its waveform, and clicking the waveform starts from that point. <strong>▶</strong> plays the WAV. In the Mac app, drag the take's name into a DAW, the Finder or a sampler to drop that WAV in, with no Save dialog. <strong>⤓</strong> downloads it. <strong>✕</strong> deletes it, and the second click confirms.</p>
 <p><strong>VOL</strong>, in the Out box, is the volume of your speakers, from 0 dB down to off. Double-click returns it to 0 dB. A take you play back goes through VOL too. The saved file, the download and the Out meter stay at the full level from before VOL. The app remembers VOL. Undo and Init keep it where it is.</p>
-<hr>
-<h2 id="7-the-top-bar">7. The top bar</h2>
-<p><strong>Undo</strong> and <strong>Redo</strong> step through your changes. <strong>Cmd+Z</strong> and <strong>Shift+Cmd+Z</strong> do the same. A knob drag is one step, a slide across sequencer steps is one step, and Init is one step. Up to 10,000 steps are kept. Undo covers knobs, switches, LFO and envelope settings and mappings, and the sequencer's steps, notes and locks. The effect order, the takes, the sample and playback stay as they are.</p>
-<p><strong>Init</strong> resets the knobs, LFOs, envelopes, mappings and effects to their defaults. Click it twice to confirm. It keeps the loaded sample, your takes, the effect order and VOL.</p>
-<p><strong>BPM</strong> starts at 132. Drag it, type a number, or tap the tempo.</p>
-<p><strong>Out</strong> is the output level. <strong>LIM</strong> lights red while a safety limiter holds the output at −0.3 dB. VOL, described with the takes, changes what you hear. The recording stays at full level.</p>
-<p><strong>Support</strong> opens the page for supporting the developer. <strong>Feedback</strong> opens an email for a bug report. <strong>Download page</strong> opens this site.</p>
     </article>
 
-    <div class="cta">
-      <a class="download" href="https://github.com/AntonisKol/adns-space/releases">
-        <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v10M4.5 7.5 9 12l4.5-4.5M2.5 15.5h13" fill="none" stroke="currentColor" stroke-width="2"/></svg>
-        Download for Mac
-      </a>
-      <span class="meta">Free · macOS 13 or later</span>
-    </div>
-
-    <footer>
-      © Antonios Kolovos. All rights reserved.
-    </footer>
   </main>
 </body>
 </html>

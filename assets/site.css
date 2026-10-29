@@ -10,6 +10,12 @@
   --vinyl: #294b34;
   --vinyl-soft: #a0c2a7;
   --trends: #392850;
+  --trends-soft: #b19bdd;
+  /* Each product page sets its own accent; Home stays neutral. */
+  --accent: var(--ink);
+  --eyebrow: var(--muted);
+  --content-top: clamp(56px, 9vw, 104px);
+  --page-heading-size: clamp(28px, 5vw, 40px);
   --sans: "Chakra Petch", system-ui, sans-serif;
   --mono: "Share Tech Mono", ui-monospace, monospace;
   font-synthesis: none;
@@ -20,6 +26,9 @@
 html { scroll-behavior: smooth; }
 
 body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   margin: 0;
   color: var(--ink);
   background: var(--ground);
@@ -29,9 +38,13 @@ body {
 a { color: inherit; }
 
 a:focus-visible {
-  outline: 3px solid var(--vinyl-soft);
+  outline: 3px solid var(--accent);
   outline-offset: 4px;
 }
+
+.space-page { --accent: var(--space); --eyebrow: var(--space); }
+.vinyl-page { --accent: var(--vinyl-soft); --eyebrow: var(--vinyl-soft); }
+.market-page { --accent: var(--trends-soft); --eyebrow: var(--trends-soft); }
 
 .wrap {
   width: min(1120px, calc(100% - 36px));
@@ -45,7 +58,10 @@ a:focus-visible {
   gap: 24px;
   padding: 21px 0;
   border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
 }
+
+main { flex: 1 0 auto; }
 
 .brand {
   display: inline-flex;
@@ -88,22 +104,16 @@ a:focus-visible {
 }
 
 .market-page {
-  --market-accent: #b19bdd;
   --market-line: #403553;
 }
 
-.market-page .eyebrow,
 .market-page .coming-soon strong {
-  color: var(--market-accent);
-}
-
-.market-page a:focus-visible {
-  outline-color: var(--market-accent);
+  color: var(--accent);
 }
 
 .market-page .market-hero {
   max-width: 860px;
-  padding: clamp(58px, 10vw, 112px) 0 64px;
+  padding: var(--content-top) 0 64px;
 }
 
 .market-page .market-hero h1 {
@@ -123,7 +133,7 @@ a:focus-visible {
   max-width: 620px;
   padding: 18px 20px;
   border: 1px solid var(--market-line);
-  border-left: 3px solid var(--market-accent);
+  border-left: 3px solid var(--accent);
   background:
     radial-gradient(ellipse at 0 50%, rgb(177 155 221 / 9%), transparent 75%),
     var(--panel);
@@ -140,27 +150,16 @@ a:focus-visible {
   text-transform: uppercase;
 }
 
-.coming-soon-mark {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  place-items: center;
-  border: 1px solid var(--market-line);
-  color: var(--market-accent);
-  font-size: 20px;
-}
-
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
   align-items: center;
   gap: clamp(30px, 6vw, 72px);
-  padding: clamp(56px, 9vw, 104px) 0 64px;
+  padding: var(--content-top) 0 64px;
 }
 
 .eyebrow {
-  color: var(--muted);
+  color: var(--eyebrow);
   font: 11px var(--mono);
   letter-spacing: .16em;
   text-transform: uppercase;
@@ -168,11 +167,14 @@ a:focus-visible {
 
 h1, h2, h3, p { margin-top: 0; }
 
+/* One heading scale for every page: h1 > section h2 > card h3, all bold. */
+h1, h2, h3 { font-weight: 700; }
+
 h1 {
   margin: 14px 0 20px;
-  font-size: clamp(46px, 8vw, 86px);
-  line-height: .96;
-  letter-spacing: -.05em;
+  font-size: var(--page-heading-size);
+  line-height: 1.1;
+  letter-spacing: .14em;
 }
 
 .hero-copy > p,
@@ -189,11 +191,13 @@ h1 {
   margin-top: 27px;
 }
 
+/* The site's one button: outlined, or filled with the page accent for the main action. */
 .button {
   display: inline-flex;
   min-height: 43px;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   padding: 9px 14px;
   border: 1px solid var(--line);
   color: var(--ink);
@@ -209,15 +213,34 @@ h1 {
   background: var(--panel-raised);
 }
 
-.button.primary {
-  border-color: var(--vinyl-soft);
-  color: var(--ground);
-  background: var(--vinyl-soft);
+.button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-.button.primary:hover { background: #bad5bf; }
+.button.primary {
+  border-color: var(--accent);
+  color: var(--ground);
+  background: var(--accent);
+}
+
+.button.primary:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  filter: brightness(1.08);
+}
+
+.button.large {
+  min-height: 50px;
+  padding: 12px 24px;
+  font-size: 14px;
+  letter-spacing: .14em;
+}
+
+.button svg { flex: none; }
 
 .hero-art {
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--panel);
@@ -250,8 +273,9 @@ h1 {
 
 .section-head h2 {
   margin: 0;
-  font-size: clamp(27px, 4vw, 39px);
-  line-height: 1.08;
+  font-size: clamp(22px, 3vw, 26px);
+  line-height: 1.15;
+  letter-spacing: .1em;
 }
 
 .section-head p {
@@ -287,7 +311,7 @@ h1 {
 
 .card.space { --card-accent: var(--space); }
 .card.vinyl { --card-accent: var(--vinyl-soft); }
-.card.trends { --card-accent: #b19bdd; }
+.card.trends { --card-accent: var(--trends-soft); }
 
 .card-meta {
   display: flex;
@@ -307,8 +331,9 @@ h1 {
 
 .card h3 {
   margin: 25px 0 10px;
-  font-size: 25px;
-  line-height: 1.1;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: .04em;
 }
 
 .card p {
@@ -338,7 +363,7 @@ h1 {
 .statement strong { color: var(--ink); }
 
 .page-hero {
-  padding: clamp(48px, 8vw, 84px) 0 34px;
+  padding: var(--content-top) 0 34px;
 }
 
 .page-hero h1 {
@@ -362,7 +387,7 @@ h1 {
 .product-line span {
   padding: 5px 8px;
   border: 1px solid var(--line);
-  color: var(--vinyl-soft);
+  color: var(--accent);
   font: 10px var(--mono);
   letter-spacing: .05em;
   text-transform: uppercase;
@@ -594,7 +619,7 @@ footer {
 footer a { color: var(--ink); }
 
 footer.site-footer {
-  margin: 40px auto 0;
+  margin: auto auto 0;
   padding: 18px 0 24px;
 }
 
@@ -614,6 +639,8 @@ footer.site-footer {
     padding-top: 55px;
   }
 
+  .page-hero { padding-top: 55px; }
+
   .hero-art { max-width: 680px; }
 
   .cards,
@@ -628,7 +655,7 @@ footer.site-footer {
 }
 
 @media (max-width: 520px) {
-  .brand img { width: 220px; }
+  .brand-logo { width: 220px; }
   .nav { gap: 8px 15px; }
   .app-top { align-items: flex-start; flex-direction: column; }
   .app-bottom { flex-direction: column; }

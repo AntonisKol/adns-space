@@ -597,6 +597,14 @@ h1 {
   margin: 24px 0;
 }
 
+/* The Techno Vinyls releases, rendered into the page by the app. */
+.vinyl-app {
+  min-height: 60vh;
+  margin: 8px 0 54px;
+}
+
+.app-note { color: var(--muted); }
+
 .back-link {
   display: inline-block;
   margin: 0 0 32px;

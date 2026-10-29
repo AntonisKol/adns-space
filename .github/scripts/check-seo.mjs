@@ -138,15 +138,14 @@ for (const page of PAGES) {
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);
 }
 
-// Apps built elsewhere and published here (issue #26): their page exists and its files are all here.
-const APPS = [{ file: 'techno-vinyls/app/index.html', url: `${SITE}techno-vinyls/app/`, linkedFrom: 'techno-vinyls/index.html' }];
+// Apps built elsewhere that render inside a page (issue #26): the page has the
+// app's container and loads its files, which must all be here.
+const APPS = [{ page: 'techno-vinyls/index.html', container: 'id="techno-vinyls"', files: '/techno-vinyls/app/static/' }];
 for (const app of APPS) {
-  if (!existsSync(app.file)) {
-    fail(app.file, 'missing: build it in the app repo and copy it here');
-    continue;
-  }
-  checkLinks(app.file, readFileSync(app.file, 'utf8'), app.url);
-  if (!readFileSync(app.linkedFrom, 'utf8').includes(`href="${new URL(app.url).pathname}"`)) fail(app.linkedFrom, `no link to ${app.url}`);
+  const html = readFileSync(app.page, 'utf8');
+  if (!html.includes(app.container)) fail(app.page, `no ${app.container} for the app`);
+  const block = html.match(/<!-- techno-vinyls:app -->([\s\S]*?)<!-- \/techno-vinyls:app -->/)?.[1] ?? '';
+  if (!block.includes(`src="${app.files}`)) fail(app.page, `does not load the app from ${app.files}: run npm run publish:site in the app repo`);
 }
 
 if (readFileSync('CNAME', 'utf8').trim() !== new URL(SITE).hostname) fail('CNAME', `should be ${new URL(SITE).hostname}`);

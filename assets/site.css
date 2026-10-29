@@ -10,6 +10,8 @@
   --vinyl: #294b34;
   --vinyl-soft: #a0c2a7;
   --trends: #392850;
+  --content-top: clamp(56px, 9vw, 104px);
+  --page-heading-size: clamp(28px, 5vw, 40px);
   --sans: "Chakra Petch", system-ui, sans-serif;
   --mono: "Share Tech Mono", ui-monospace, monospace;
   font-synthesis: none;
@@ -20,6 +22,9 @@
 html { scroll-behavior: smooth; }
 
 body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   margin: 0;
   color: var(--ink);
   background: var(--ground);
@@ -45,7 +50,10 @@ a:focus-visible {
   gap: 24px;
   padding: 21px 0;
   border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
 }
+
+main { flex: 1 0 auto; }
 
 .brand {
   display: inline-flex;
@@ -103,7 +111,7 @@ a:focus-visible {
 
 .market-page .market-hero {
   max-width: 860px;
-  padding: clamp(58px, 10vw, 112px) 0 64px;
+  padding: var(--content-top) 0 64px;
 }
 
 .market-page .market-hero h1 {
@@ -156,7 +164,7 @@ a:focus-visible {
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
   align-items: center;
   gap: clamp(30px, 6vw, 72px);
-  padding: clamp(56px, 9vw, 104px) 0 64px;
+  padding: var(--content-top) 0 64px;
 }
 
 .eyebrow {
@@ -170,9 +178,9 @@ h1, h2, h3, p { margin-top: 0; }
 
 h1 {
   margin: 14px 0 20px;
-  font-size: clamp(46px, 8vw, 86px);
-  line-height: .96;
-  letter-spacing: -.05em;
+  font-size: var(--page-heading-size);
+  line-height: 1.1;
+  letter-spacing: .14em;
 }
 
 .hero-copy > p,
@@ -338,7 +346,7 @@ h1 {
 .statement strong { color: var(--ink); }
 
 .page-hero {
-  padding: clamp(48px, 8vw, 84px) 0 34px;
+  padding: var(--content-top) 0 34px;
 }
 
 .page-hero h1 {
@@ -594,7 +602,7 @@ footer {
 footer a { color: var(--ink); }
 
 footer.site-footer {
-  margin: 40px auto 0;
+  margin: auto auto 0;
   padding: 18px 0 24px;
 }
 
@@ -614,6 +622,8 @@ footer.site-footer {
     padding-top: 55px;
   }
 
+  .page-hero { padding-top: 55px; }
+
   .hero-art { max-width: 680px; }
 
   .cards,
@@ -628,7 +638,7 @@ footer.site-footer {
 }
 
 @media (max-width: 520px) {
-  .brand img { width: 220px; }
+  .brand-logo { width: 220px; }
   .nav { gap: 8px 15px; }
   .app-top { align-items: flex-start; flex-direction: column; }
   .app-bottom { flex-direction: column; }

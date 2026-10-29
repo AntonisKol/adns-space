@@ -77,7 +77,7 @@
     :root {
       --ground: #05060b;
       --panel: rgba(12, 14, 23, 0.82);
-      --line: rgba(255, 255, 255, 0.1);
+      --line: #30343b;
       --ink: #eceef2;
       --muted: #9aa0ad;
       --accent: #d7ff3a;
@@ -99,10 +99,10 @@
       font: 17px/1.6 'Chakra Petch', system-ui, sans-serif;
     }
     .mono { font-family: 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
-    main { max-width: 1040px; margin: 0 auto; padding: 56px 16px 40px; }
-    header { display: flex; align-items: center; gap: 16px; }
-    header img { width: 64px; height: 64px; }
-    h1 { margin: 0; font-size: clamp(28px, 5vw, 40px); letter-spacing: .14em; line-height: 1.1; }
+    main.space-content { display: flex; width: min(1120px, calc(100% - 36px)); flex: 1 0 auto; flex-direction: column; margin: 0 auto; padding: var(--content-top) 0 0; }
+    .space-content > header { display: flex; align-items: center; gap: 16px; }
+    .space-content > header img { width: 64px; height: 64px; }
+    h1 { margin: 0; font-size: var(--page-heading-size); letter-spacing: .14em; line-height: 1.1; }
     .kicker { margin: 4px 0 0; color: var(--muted); font-size: 12px; }
     .beta { color: var(--beta); }
     .lead { max-width: 680px; margin: 28px 0 0; font-size: clamp(18px, 2.4vw, 21px); }
@@ -141,11 +141,11 @@
     ol { margin: 0 0 8px; padding-left: 22px; }
     li { margin: 0 0 8px; }
     li b { color: var(--ink); }
-    footer { margin: 40px 0 0; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    footer { margin: auto 0 0; padding-top: 40px; color: var(--muted); font-size: 12px; line-height: 1.7; }
     footer a { color: var(--muted); }
     @media (max-width: 560px) {
-      main { padding-top: 32px; }
-      header img { width: 52px; height: 52px; }
+      main.space-content { padding-top: 55px; }
+      .space-content > header img { width: 52px; height: 52px; }
       .download { width: 100%; justify-content: center; }
     }
   </style>
@@ -157,13 +157,13 @@
         <title id="brand-title">ADNS Audio</title>
         <text x="0" y="35" font-size="31" font-weight="700" letter-spacing="1">ADNS Audio</text>
         <g>
-          <rect x="225" y="22" width="2.5" height="7" rx="1.25" />
-          <rect x="231" y="18" width="2.5" height="15" rx="1.25" />
-          <rect x="237" y="13" width="2.5" height="25" rx="1.25" />
-          <rect x="243" y="20" width="2.5" height="11" rx="1.25" />
-          <rect x="249" y="15" width="2.5" height="21" rx="1.25" />
-          <rect x="255" y="20" width="2.5" height="11" rx="1.25" />
-          <rect x="261" y="22" width="2.5" height="7" rx="1.25" />
+          <rect x="217" y="22" width="2.5" height="7" rx="1.25" />
+          <rect x="223" y="18" width="2.5" height="15" rx="1.25" />
+          <rect x="229" y="13" width="2.5" height="25" rx="1.25" />
+          <rect x="235" y="20" width="2.5" height="11" rx="1.25" />
+          <rect x="241" y="15" width="2.5" height="21" rx="1.25" />
+          <rect x="247" y="20" width="2.5" height="11" rx="1.25" />
+          <rect x="253" y="22" width="2.5" height="7" rx="1.25" />
         </g>
       </svg>
     </a>
@@ -174,7 +174,7 @@
       <a href="/market-trends/">Market Trends</a>
     </nav>
   </header>
-  <main>
+  <main class="space-content">
     <header>
       <img src="/assets/icon.png" alt="" width="64" height="64" />
       <div>

@@ -6,6 +6,7 @@ const SITE = 'https://adnsaudio.com/';
 const PAGES = [
   { file: 'space/index.html', url: `${SITE}space/`, types: ['SoftwareApplication', 'Organization', 'WebSite'] },
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
+  { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [

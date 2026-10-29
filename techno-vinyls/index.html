@@ -80,18 +80,19 @@
         <span>Artist search</span>
         <span>Discogs lowest price</span>
       </div>
-      <div class="hero-actions">
-        <a class="button primary large" href="/techno-vinyls/app/">Open Techno Vinyls →</a>
-      </div>
     </section>
 
-    <figure class="product-screenshot">
-      <a href="/techno-vinyls/app/" aria-label="Open Techno Vinyls"><img src="/assets/techno-vinyls-screenshot.jpg" alt="Techno Vinyls app showing real Discogs vinyl release results, artwork and current lowest listed prices." width="1400" height="620" /></a>
-      <figcaption>Release details and lowest prices are retrieved from Discogs.</figcaption>
-    </figure>
+    <!-- The releases, rendered by the Techno Vinyls app (AntonisKol/techno-vinyls). -->
+    <section class="vinyl-app" aria-label="Techno vinyl releases">
+      <div id="techno-vinyls"></div>
+      <noscript><p class="app-note">Turn on JavaScript to browse the releases.</p></noscript>
+    </section>
   </main>
   <footer class="wrap site-footer">
     <span>© Antonios Kolovos. All rights reserved.</span>
   </footer>
+  <!-- techno-vinyls:app -->
+  <script defer src="/techno-vinyls/app/static/js/main.8feb1673.js"></script>
+  <!-- /techno-vinyls:app -->
 </body>
 </html>

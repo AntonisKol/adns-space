@@ -1,22 +1,27 @@
 <!doctype html>
-<!-- ADNS Audio's home for now: forwards to ADNS SPACE. Can become a page listing products once there's a second one. The brand's structured data lives here, on the home page. -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ADNS SPACE: sampler, arp and step sequencer for Mac</title>
-  <meta name="description" content="A sampler you play on an X-Y pad, with an arpeggiator and a step sequencer with parameter locks. Free beta for Mac." />
-  <link rel="canonical" href="https://adnsaudio.com/space/" />
+  <meta name="color-scheme" content="dark" />
+  <title>ADNS Audio — Independent Audio Tools &amp; Music Discovery</title>
+  <meta name="description" content="ADNS Audio builds independent audio software and music discovery tools. Explore ADNS SPACE, Techno Vinyls, and catalogue research." />
+  <link rel="canonical" href="https://adnsaudio.com/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="ADNS Audio" />
-  <meta property="og:url" content="https://adnsaudio.com/space/" />
-  <meta property="og:title" content="ADNS SPACE: sampler, arp and step sequencer for Mac" />
-  <meta property="og:description" content="A sampler you play on an X-Y pad, with an arpeggiator and a step sequencer with parameter locks. Free beta for Mac." />
-  <meta property="og:image" content="https://adnsaudio.com/assets/screenshot.jpg" />
-  <meta property="og:image:width" content="1400" />
-  <meta property="og:image:height" content="780" />
-  <meta property="og:image:alt" content="ADNS SPACE: the X-Y pad, LFOs and envelopes, effect strips, and the arpeggiator and 64-step sequencer." />
+  <meta property="og:url" content="https://adnsaudio.com/" />
+  <meta property="og:title" content="ADNS Audio — Independent Audio Tools &amp; Music Discovery" />
+  <meta property="og:description" content="Independent audio software and music discovery tools, from ADNS SPACE to Techno Vinyls and catalogue research." />
+  <meta property="og:image" content="https://adnsaudio.com/assets/adns-audio-social.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ADNS Audio: independent audio software and music discovery projects." />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image:alt" content="ADNS Audio: independent audio software and music discovery projects." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/assets/site.css" />
   <script type="application/ld+json">
   [
     {
@@ -25,24 +30,91 @@
       "@id": "https://adnsaudio.com/#org",
       "name": "ADNS Audio",
       "url": "https://adnsaudio.com/",
-      "logo": "https://adnsaudio.com/assets/icon.png",
+      "logo": "https://adnsaudio.com/assets/adns-audio-logo.svg",
       "email": "contact@adnsaudio.com"
     },
     {
       "@context": "https://schema.org",
       "@type": "WebSite",
       "name": "ADNS Audio",
-      "alternateName": "ADNS SPACE",
+      "alternateName": "ADNS Audio",
       "url": "https://adnsaudio.com/"
     }
   ]
   </script>
-  <!-- Keep #section links: the script carries the hash along; the refresh covers no-JS. -->
-  <script>location.replace('https://adnsaudio.com/space/' + location.hash);</script>
-  <meta http-equiv="refresh" content="0; url=https://adnsaudio.com/space/" />
-  <style>html { background: #05060b; color: #eceef2; font: 17px/1.6 system-ui, sans-serif; } a { color: #d7ff3a; }</style>
 </head>
 <body>
-  <p style="margin: 56px 16px;"><a href="https://adnsaudio.com/space/">ADNS SPACE: sampler, arp and step sequencer for Mac</a></p>
+  <header class="wrap mast">
+    <a class="brand" href="/" aria-label="ADNS Audio home">
+      <img src="/assets/adns-audio-logo.svg" alt="ADNS Audio" width="310" height="48" />
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <a class="current" href="/" aria-current="page">Home</a>
+      <a href="/space/">ADNS SPACE</a>
+      <a href="/techno-vinyls/">Techno Vinyls</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Independent audio software · Music discovery</div>
+        <h1>Make sound.<br />Find the signal.</h1>
+        <p>ADNS Audio is an independent studio building audio instruments and tools for exploring music. Small, considered projects—from first idea through to working software.</p>
+        <div class="hero-actions">
+          <a class="button" href="#projects">Explore projects ↓</a>
+          <a class="button" href="/space/">ADNS SPACE ↗</a>
+        </div>
+      </div>
+      <figure class="hero-art">
+        <a href="/space/" aria-label="Explore ADNS SPACE">
+          <img
+            src="/assets/screenshot.jpg"
+            alt="ADNS SPACE Mac app: X-Y pad, modulation and effects panels, arpeggiator and step sequencer."
+            width="1400"
+            height="780"
+          />
+        </a>
+        <figcaption>ADNS SPACE · standalone instrument for Mac</figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <p>One current instrument and two music-discovery projects at different stages. Each has its own character, built around a shared studio identity.</p>
+      </div>
+      <div class="cards">
+        <a class="card space" href="/space/">
+          <div class="card-meta"><span>Instrument · macOS</span><span class="pill">Available · beta</span></div>
+          <h3>ADNS SPACE</h3>
+          <p>A one-shot sampler played on an X-Y pad, with effects, modulation, an arpeggiator, a 64-step sequencer and take recording.</p>
+          <span class="card-link">Explore ADNS SPACE ↗</span>
+        </a>
+        <a class="card vinyl" href="/techno-vinyls/">
+          <div class="card-meta"><span>Discovery · web</span><span class="pill">Prototype</span></div>
+          <h3>Techno Vinyls</h3>
+          <p>Find techno releases pressed on vinyl, search artists and explore Discogs release details and lowest prices.</p>
+          <span class="card-link">Explore Techno Vinyls ↗</span>
+        </a>
+        <a class="card trends" href="https://github.com/AntonisKol/music-catalogue-market-trends-wip" target="_blank" rel="noopener noreferrer">
+          <div class="card-meta"><span>Research · data</span><span class="pill">Early build</span></div>
+          <h3>Catalogue / Market Trends</h3>
+          <p>A music-catalogue data project in its early build stage. Its product interface and analysis features are still in development.</p>
+          <span class="card-link">View project repository ↗</span>
+        </a>
+      </div>
+    </section>
+
+    <p class="statement">
+      <strong>One studio, different product identities.</strong> ADNS Audio stays monochrome; each product keeps its own visual character—SPACE's yellow-green, Techno Vinyls' dark green, and Market Trends' dark violet.
+    </p>
+  </main>
+
+  <footer class="wrap">
+    <span>ADNS Audio</span>
+    <span>Independent audio and music software</span>
+    <a href="mailto:contact@adnsaudio.com">Contact</a>
+  </footer>
 </body>
 </html>

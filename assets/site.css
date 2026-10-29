@@ -64,7 +64,7 @@ a:focus-visible {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 10px 22px;
+  gap: 10px 18px;
   color: var(--muted);
   font: 12px var(--mono);
   letter-spacing: .07em;
@@ -78,6 +78,70 @@ a:focus-visible {
 .nav a:hover,
 .nav .current {
   color: var(--ink);
+}
+
+.market-page {
+  --market-accent: #b19bdd;
+  --market-line: #403553;
+}
+
+.market-page .eyebrow,
+.market-page .coming-soon strong {
+  color: var(--market-accent);
+}
+
+.market-page a:focus-visible {
+  outline-color: var(--market-accent);
+}
+
+.market-page .market-hero {
+  max-width: 860px;
+  padding: clamp(58px, 10vw, 112px) 0 64px;
+}
+
+.market-page .market-hero h1 {
+  max-width: 760px;
+}
+
+.market-page .market-hero p {
+  max-width: 660px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.coming-soon {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 620px;
+  padding: 18px 20px;
+  border: 1px solid var(--market-line);
+  border-left: 3px solid var(--market-accent);
+  background:
+    radial-gradient(ellipse at 0 50%, rgb(177 155 221 / 9%), transparent 75%),
+    var(--panel);
+  color: var(--muted);
+  font: 12px/1.6 var(--mono);
+}
+
+.coming-soon strong {
+  display: block;
+  margin-bottom: 3px;
+  color: var(--ink);
+  font-size: 14px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.coming-soon-mark {
+  display: grid;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  place-items: center;
+  border: 1px solid var(--market-line);
+  color: var(--market-accent);
+  font-size: 20px;
 }
 
 .hero {
@@ -484,12 +548,6 @@ h1 {
   text-transform: uppercase;
 }
 
-.small-note {
-  margin: 12px 0 30px;
-  color: var(--muted);
-  font-size: 12px;
-}
-
 footer {
   display: flex;
   flex-wrap: wrap;
@@ -511,6 +569,8 @@ footer a { color: var(--ink); }
   }
 
   .nav { justify-content: flex-start; }
+
+  .market-page .market-hero { padding-top: 55px; }
 
   .hero {
     grid-template-columns: 1fr;

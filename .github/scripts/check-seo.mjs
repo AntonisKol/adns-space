@@ -8,11 +8,13 @@ const PAGES = [
   { file: 'space/index.html', url: `${SITE}space/`, types: ['SoftwareApplication', 'Organization', 'WebSite'] },
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
+  { file: 'market-trends/index.html', url: `${SITE}market-trends/`, types: ['WebPage'] },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [
   { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
+const NAVIGATION = ['/', '/space/', '/techno-vinyls/', '/market-trends/'];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
 
@@ -101,6 +103,14 @@ for (const page of PAGES) {
   }
 
   checkLinks(where, html, page.url);
+
+  const nav = html.match(/<nav class="nav"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+  if (!nav) fail(where, 'no shared site navigation');
+  else {
+    for (const href of NAVIGATION) {
+      if (!nav.includes(`href="${href}"`)) fail(where, `navigation has no link to ${href}`);
+    }
+  }
 
   const text = html.replace(/<script(?! type="application\/ld\+json")[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '');
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);

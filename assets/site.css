@@ -54,10 +54,17 @@ a:focus-visible {
   text-decoration: none;
 }
 
-.brand img {
+.brand-logo {
   display: block;
   width: 248px;
   height: auto;
+  color: var(--ink);
+  font-family: var(--sans);
+}
+
+.brand-logo text,
+.brand-logo g {
+  fill: currentColor;
 }
 
 .nav {

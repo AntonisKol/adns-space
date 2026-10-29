@@ -1,0 +1,10 @@
+# Everything in this repository is published on adnsaudio.com, so these must
+# never be committed.
+
+# Secrets and local settings. An .env.example with empty values is fine.
+.env
+.env.*
+!.env.example
+
+# Folder settings macOS's Finder writes into every folder it opens.
+.DS_Store

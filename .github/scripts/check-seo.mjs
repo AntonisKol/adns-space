@@ -55,6 +55,7 @@ const parseLd = (where, html) => {
 const meta = (html, attr, name) =>
   tag(html, new RegExp(`<meta ${attr}="${name.replace(/[:.]/g, '\\$&')}" content="([^"]*)"`));
 
+const logos = new Set();
 for (const page of PAGES) {
   const html = readFileSync(page.file, 'utf8');
   const where = page.file;
@@ -120,6 +121,18 @@ for (const page of PAGES) {
       fail(where, `redefines --${name}; the shared colours live in assets/site.css`);
     }
   }
+
+  // Content starts at the same point on every page: an eyebrow first in <main>, then the h1.
+  const content = html.match(/<main[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
+  const eyebrowAt = content.search(/class="eyebrow"/);
+  const before = content.slice(0, Math.max(eyebrowAt, 0));
+  if (eyebrowAt < 0 || eyebrowAt > content.search(/<h1[\s>]/) || /<(img|figure|p|h[1-6])[\s>]/.test(before)) {
+    fail(where, 'main should start with an eyebrow, then the h1');
+  }
+  const logo = html.match(/<svg class="brand-logo"[\s\S]*?<\/svg>/)?.[0];
+  if (!logo) fail(where, 'no ADNS Audio logo in the masthead');
+  else if (logos.size && !logos.has(logo)) fail(where, 'the logo differs from the other pages');
+  else logos.add(logo);
 
   const text = html.replace(/<script(?! type="application\/ld\+json")[\s\S]*?<\/script>|<style[\s\S]*?<\/style>/g, '');
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);

@@ -138,6 +138,17 @@ for (const page of PAGES) {
   for (const re of BANNED) if (re.test(text)) fail(where, `uses ${re}`);
 }
 
+// Apps built elsewhere and published here (issue #26): their page exists and its files are all here.
+const APPS = [{ file: 'techno-vinyls/app/index.html', url: `${SITE}techno-vinyls/app/`, linkedFrom: 'techno-vinyls/index.html' }];
+for (const app of APPS) {
+  if (!existsSync(app.file)) {
+    fail(app.file, 'missing: build it in the app repo and copy it here');
+    continue;
+  }
+  checkLinks(app.file, readFileSync(app.file, 'utf8'), app.url);
+  if (!readFileSync(app.linkedFrom, 'utf8').includes(`href="${new URL(app.url).pathname}"`)) fail(app.linkedFrom, `no link to ${app.url}`);
+}
+
 if (readFileSync('CNAME', 'utf8').trim() !== new URL(SITE).hostname) fail('CNAME', `should be ${new URL(SITE).hostname}`);
 if (!readFileSync('robots.txt', 'utf8').includes(`Sitemap: ${SITE}sitemap.xml`)) fail('robots.txt', 'no Sitemap line');
 const sitemap = readFileSync('sitemap.xml', 'utf8');

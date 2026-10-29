@@ -539,6 +539,31 @@ h1 {
   font-size: 12px;
 }
 
+.product-screenshot {
+  margin: 22px 0 54px;
+}
+
+.product-screenshot img,
+.guide-screenshot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--line);
+  background: #05060b;
+}
+
+.product-screenshot figcaption,
+.guide-screenshot figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font: 10px var(--mono);
+  letter-spacing: .06em;
+}
+
+.guide-screenshot {
+  margin: 24px 0;
+}
+
 .back-link {
   display: inline-block;
   margin: 0 0 32px;
@@ -560,6 +585,11 @@ footer {
 }
 
 footer a { color: var(--ink); }
+
+footer.site-footer {
+  margin: 40px auto 0;
+  padding: 18px 0 24px;
+}
 
 @media (max-width: 760px) {
   .mast {

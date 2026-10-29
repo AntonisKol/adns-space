@@ -14,6 +14,7 @@
   /* Each product page sets its own accent; Home stays neutral. */
   --accent: var(--ink);
   --eyebrow: var(--muted);
+  /* Where every page's content starts under the masthead, so it doesn't jump between pages. */
   --content-top: clamp(56px, 9vw, 104px);
   --page-heading-size: clamp(28px, 5vw, 40px);
   --sans: "Chakra Petch", system-ui, sans-serif;
@@ -72,7 +73,7 @@ main { flex: 1 0 auto; }
 
 .brand-logo {
   display: block;
-  width: 248px;
+  width: 192px;
   height: auto;
   color: var(--ink);
   font-family: var(--sans);
@@ -153,7 +154,7 @@ main { flex: 1 0 auto; }
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
-  align-items: center;
+  align-items: start;
   gap: clamp(30px, 6vw, 72px);
   padding: var(--content-top) 0 64px;
 }
@@ -624,6 +625,8 @@ footer.site-footer {
 }
 
 @media (max-width: 760px) {
+  :root { --content-top: 55px; }
+
   .mast {
     align-items: flex-start;
     flex-direction: column;
@@ -632,14 +635,7 @@ footer.site-footer {
 
   .nav { justify-content: flex-start; }
 
-  .market-page .market-hero { padding-top: 55px; }
-
-  .hero {
-    grid-template-columns: 1fr;
-    padding-top: 55px;
-  }
-
-  .page-hero { padding-top: 55px; }
+  .hero { grid-template-columns: 1fr; }
 
   .hero-art { max-width: 680px; }
 
@@ -655,7 +651,9 @@ footer.site-footer {
 }
 
 @media (max-width: 520px) {
-  .brand-logo { width: 220px; }
+  .brand-logo { width: 170px; }
+  /* Keep eyebrows on one line on phones, so headings start at the same height. */
+  .eyebrow { letter-spacing: .08em; }
   .nav { gap: 8px 15px; }
   .app-top { align-items: flex-start; flex-direction: column; }
   .app-bottom { flex-direction: column; }

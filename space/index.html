@@ -74,15 +74,8 @@
   <link rel="stylesheet" href="/assets/site.css" />
   <style>
     html { font-synthesis: none; }
-    :root {
-      --ground: #05060b;
-      --panel: rgba(12, 14, 23, 0.82);
-      --line: #30343b;
-      --ink: #eceef2;
-      --muted: #9aa0ad;
-      --accent: #d7ff3a;
-      --beta: #8fd3ff;
-    }
+    /* Colours come from /assets/site.css; --accent is ADNS SPACE lime via .space-page. */
+    :root { --beta: #8fd3ff; }
     * { box-sizing: border-box; }
     html { background: var(--ground); }
     body {
@@ -109,24 +102,15 @@
     .lead strong { color: var(--accent); font-weight: 500; }
     .lead a { color: var(--accent); }
     .cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 22px; margin: 30px 0 0; }
-    .download {
-      display: inline-flex; align-items: center; gap: 12px;
-      padding: 15px 26px; border-radius: 3px;
-      background: var(--accent); color: #05060b; text-decoration: none;
-      font: 700 15px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase;
-    }
-    .download:hover { filter: brightness(1.08); }
-    .download:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-    .download svg { flex: none; }
     .meta { color: var(--muted); font-size: 14px; }
     .meta b { color: var(--ink); font-weight: 500; }
     figure { margin: 40px 0 0; }
-    figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 30px 80px rgba(0,0,0,.6); }
+    figure img { display: block; width: 100%; height: auto; border: 1px solid var(--line); box-shadow: 0 30px 80px rgba(0,0,0,.6); }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: 14px; margin: 44px 0 0; }
-    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 18px 20px; }
-    .card h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); }
-    .card p { margin: 0; color: #c9cdd6; font-size: 15px; }
-    section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 24px 24px 18px; }
+    .feature { background: var(--panel); border: 1px solid var(--line); padding: 18px 20px; }
+    .feature h3 { margin: 0 0 6px; font-size: 13px; color: var(--accent); }
+    .feature p { margin: 0; color: #c9cdd6; font-size: 15px; }
+    section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); padding: 24px 24px 18px; }
     section.install h2 { margin: 0 0 4px; font-size: 14px; }
     section.install p { margin: 0 0 14px; color: #c9cdd6; font-size: 15px; }
     section.notes { margin-top: 14px; }
@@ -141,16 +125,16 @@
     ol { margin: 0 0 8px; padding-left: 22px; }
     li { margin: 0 0 8px; }
     li b { color: var(--ink); }
-    footer { margin: auto 0 0; padding-top: 40px; color: var(--muted); font-size: 12px; line-height: 1.7; }
+    footer { display: block; margin: auto 0 0; padding-top: 40px; line-height: 1.7; }
     footer a { color: var(--muted); }
     @media (max-width: 560px) {
       main.space-content { padding-top: 55px; }
       .space-content > header img { width: 52px; height: 52px; }
-      .download { width: 100%; justify-content: center; }
+      .cta .button { width: 100%; }
     }
   </style>
 </head>
-<body>
+<body class="space-page">
   <header class="wrap mast site-mast">
     <a class="brand" href="/" aria-label="ADNS Audio home">
       <svg class="brand-logo" viewBox="0 0 310 48" role="img" aria-labelledby="brand-title">
@@ -192,7 +176,7 @@
     </p>
 
     <div class="cta">
-      <a class="download" id="download" href="https://github.com/AntonisKol/adns-space/releases">
+      <a class="button primary large" id="download" href="https://github.com/AntonisKol/adns-space/releases">
         <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M9 2v10M4.5 7.5 9 12l4.5-4.5M2.5 15.5h13" fill="none" stroke="currentColor" stroke-width="2"/></svg>
         Download for Mac
       </a>
@@ -204,13 +188,13 @@
     </figure>
 
     <div class="grid">
-      <div class="card"><h3 class="mono">X-Y pad</h3><p>Pitch on one axis, arp speed on the other. Hold keeps it playing when you let go.</p></div>
-      <div class="card"><h3 class="mono">Ten effects</h3><p>Filter, two EQs, shifter, phaser-flanger, grain delay, reverb, auto pan, Corpus resonators and filter delay. Drag them into any order. A saturator comes last.</p></div>
-      <div class="card"><h3 class="mono">Six LFOs</h3><p>Map any knob, or the pad itself, and let it move on its own.</p></div>
-      <div class="card"><h3 class="mono">Two envelopes</h3><p>Move up to four knobs on every note or every pad touch.</p></div>
-      <div class="card"><h3 class="mono">64-step sequencer</h3><p>A note on every step, and parameter locks: any effect knob or switch can change on any step, and delay and reverb locks ring out.</p></div>
-      <div class="card"><h3 class="mono">Record &amp; export</h3><p>Every take is saved with its moves. Drag a take into your DAW, or export a 24-bit WAV, or re-render with a new sound.</p></div>
-      <div class="card"><h3 class="mono">Undo &amp; redo</h3><p>Step back through every knob, map and sequencer change, and forward again. Cmd+Z works too.</p></div>
+      <div class="feature"><h3 class="mono">X-Y pad</h3><p>Pitch on one axis, arp speed on the other. Hold keeps it playing when you let go.</p></div>
+      <div class="feature"><h3 class="mono">Ten effects</h3><p>Filter, two EQs, shifter, phaser-flanger, grain delay, reverb, auto pan, Corpus resonators and filter delay. Drag them into any order. A saturator comes last.</p></div>
+      <div class="feature"><h3 class="mono">Six LFOs</h3><p>Map any knob, or the pad itself, and let it move on its own.</p></div>
+      <div class="feature"><h3 class="mono">Two envelopes</h3><p>Move up to four knobs on every note or every pad touch.</p></div>
+      <div class="feature"><h3 class="mono">64-step sequencer</h3><p>A note on every step, and parameter locks: any effect knob or switch can change on any step, and delay and reverb locks ring out.</p></div>
+      <div class="feature"><h3 class="mono">Record &amp; export</h3><p>Every take is saved with its moves. Drag a take into your DAW, or export a 24-bit WAV, or re-render with a new sound.</p></div>
+      <div class="feature"><h3 class="mono">Undo &amp; redo</h3><p>Step back through every knob, map and sequencer change, and forward again. Cmd+Z works too.</p></div>
     </div>
 
     <section class="install notes" id="notes">

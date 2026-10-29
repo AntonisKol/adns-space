@@ -1,5 +1,5 @@
-// Checks the search and link-preview tags on the site's pages, their local links, the
-// forwarding pages, robots.txt, sitemap.xml and CNAME. Run with `node .github/scripts/check-seo.mjs`; exits 1 on a problem.
+// Checks the search and link-preview tags on the site's pages, their local links, the shared
+// stylesheet and favicon, the forwarding pages, robots.txt, sitemap.xml and CNAME. Run with `node .github/scripts/check-seo.mjs`; exits 1 on a problem.
 import { existsSync, readFileSync } from 'node:fs';
 
 const SITE = 'https://adnsaudio.com/';
@@ -109,6 +109,15 @@ for (const page of PAGES) {
   else {
     for (const href of NAVIGATION) {
       if (!nav.includes(`href="${href}"`)) fail(where, `navigation has no link to ${href}`);
+    }
+  }
+
+  // One look on every page (issue #25): the shared stylesheet, a favicon, and no page-level copy of the shared colours.
+  if (!html.includes('<link rel="stylesheet" href="/assets/site.css" />')) fail(where, 'does not use /assets/site.css');
+  if (!/<link rel="icon" href="[^"]+"/.test(html)) fail(where, 'no favicon');
+  for (const [, css] of html.matchAll(/<style>([\s\S]*?)<\/style>/g)) {
+    for (const [, name] of css.matchAll(/--(ground|panel|line|ink|muted|accent):/g)) {
+      fail(where, `redefines --${name}; the shared colours live in assets/site.css`);
     }
   }
 

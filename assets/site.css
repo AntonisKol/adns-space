@@ -10,6 +10,10 @@
   --vinyl: #294b34;
   --vinyl-soft: #a0c2a7;
   --trends: #392850;
+  --trends-soft: #b19bdd;
+  /* Each product page sets its own accent; Home stays neutral. */
+  --accent: var(--ink);
+  --eyebrow: var(--muted);
   --content-top: clamp(56px, 9vw, 104px);
   --page-heading-size: clamp(28px, 5vw, 40px);
   --sans: "Chakra Petch", system-ui, sans-serif;
@@ -34,9 +38,13 @@ body {
 a { color: inherit; }
 
 a:focus-visible {
-  outline: 3px solid var(--vinyl-soft);
+  outline: 3px solid var(--accent);
   outline-offset: 4px;
 }
+
+.space-page { --accent: var(--space); --eyebrow: var(--space); }
+.vinyl-page { --accent: var(--vinyl-soft); --eyebrow: var(--vinyl-soft); }
+.market-page { --accent: var(--trends-soft); --eyebrow: var(--trends-soft); }
 
 .wrap {
   width: min(1120px, calc(100% - 36px));
@@ -96,17 +104,11 @@ main { flex: 1 0 auto; }
 }
 
 .market-page {
-  --market-accent: #b19bdd;
   --market-line: #403553;
 }
 
-.market-page .eyebrow,
 .market-page .coming-soon strong {
-  color: var(--market-accent);
-}
-
-.market-page a:focus-visible {
-  outline-color: var(--market-accent);
+  color: var(--accent);
 }
 
 .market-page .market-hero {
@@ -131,7 +133,7 @@ main { flex: 1 0 auto; }
   max-width: 620px;
   padding: 18px 20px;
   border: 1px solid var(--market-line);
-  border-left: 3px solid var(--market-accent);
+  border-left: 3px solid var(--accent);
   background:
     radial-gradient(ellipse at 0 50%, rgb(177 155 221 / 9%), transparent 75%),
     var(--panel);
@@ -148,17 +150,6 @@ main { flex: 1 0 auto; }
   text-transform: uppercase;
 }
 
-.coming-soon-mark {
-  display: grid;
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
-  place-items: center;
-  border: 1px solid var(--market-line);
-  color: var(--market-accent);
-  font-size: 20px;
-}
-
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1.08fr) minmax(280px, .92fr);
@@ -168,13 +159,16 @@ main { flex: 1 0 auto; }
 }
 
 .eyebrow {
-  color: var(--muted);
+  color: var(--eyebrow);
   font: 11px var(--mono);
   letter-spacing: .16em;
   text-transform: uppercase;
 }
 
 h1, h2, h3, p { margin-top: 0; }
+
+/* One heading scale for every page: h1 > section h2 > card h3, all bold. */
+h1, h2, h3 { font-weight: 700; }
 
 h1 {
   margin: 14px 0 20px;
@@ -197,11 +191,13 @@ h1 {
   margin-top: 27px;
 }
 
+/* The site's one button: outlined, or filled with the page accent for the main action. */
 .button {
   display: inline-flex;
   min-height: 43px;
   align-items: center;
   justify-content: center;
+  gap: 10px;
   padding: 9px 14px;
   border: 1px solid var(--line);
   color: var(--ink);
@@ -217,15 +213,34 @@ h1 {
   background: var(--panel-raised);
 }
 
-.button.primary {
-  border-color: var(--vinyl-soft);
-  color: var(--ground);
-  background: var(--vinyl-soft);
+.button:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
 }
 
-.button.primary:hover { background: #bad5bf; }
+.button.primary {
+  border-color: var(--accent);
+  color: var(--ground);
+  background: var(--accent);
+}
+
+.button.primary:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  filter: brightness(1.08);
+}
+
+.button.large {
+  min-height: 50px;
+  padding: 12px 24px;
+  font-size: 14px;
+  letter-spacing: .14em;
+}
+
+.button svg { flex: none; }
 
 .hero-art {
+  margin: 0;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--panel);
@@ -258,8 +273,9 @@ h1 {
 
 .section-head h2 {
   margin: 0;
-  font-size: clamp(27px, 4vw, 39px);
-  line-height: 1.08;
+  font-size: clamp(22px, 3vw, 26px);
+  line-height: 1.15;
+  letter-spacing: .1em;
 }
 
 .section-head p {
@@ -295,7 +311,7 @@ h1 {
 
 .card.space { --card-accent: var(--space); }
 .card.vinyl { --card-accent: var(--vinyl-soft); }
-.card.trends { --card-accent: #b19bdd; }
+.card.trends { --card-accent: var(--trends-soft); }
 
 .card-meta {
   display: flex;
@@ -315,8 +331,9 @@ h1 {
 
 .card h3 {
   margin: 25px 0 10px;
-  font-size: 25px;
-  line-height: 1.1;
+  font-size: 20px;
+  line-height: 1.15;
+  letter-spacing: .04em;
 }
 
 .card p {
@@ -370,7 +387,7 @@ h1 {
 .product-line span {
   padding: 5px 8px;
   border: 1px solid var(--line);
-  color: var(--vinyl-soft);
+  color: var(--accent);
   font: 10px var(--mono);
   letter-spacing: .05em;
   text-transform: uppercase;

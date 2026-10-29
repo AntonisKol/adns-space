@@ -4,13 +4,13 @@ import { existsSync, readFileSync } from 'node:fs';
 
 const SITE = 'https://adnsaudio.com/';
 const PAGES = [
+  { file: 'index.html', url: SITE, types: ['Organization', 'WebSite'] },
   { file: 'space/index.html', url: `${SITE}space/`, types: ['SoftwareApplication', 'Organization', 'WebSite'] },
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [
-  { file: 'index.html', to: `${SITE}space/`, types: ['Organization', 'WebSite'] },
   { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
 // Wording the site must never use (see issue #166).

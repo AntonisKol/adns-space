@@ -128,7 +128,7 @@
     section.install { margin: 48px 0 0; background: var(--panel); border: 1px solid var(--line); border-radius: 4px; padding: 24px 24px 18px; }
     section.install h2 { margin: 0 0 4px; font-size: 14px; }
     section.install p { margin: 0 0 14px; color: #c9cdd6; font-size: 15px; }
-    section.support, section.notes { margin-top: 14px; }
+    section.notes { margin-top: 14px; }
     .notes-scroll { max-height: 240px; overflow-y: auto; padding-right: 8px; }
     .notes-scroll::-webkit-scrollbar { width: 8px; }
     .notes-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.22); border-radius: 4px; }
@@ -137,10 +137,6 @@
     .notes-scroll ul { list-style: none; margin: 0; padding: 0; }
     .notes-scroll li { margin: 0 0 5px; font-size: 14px; line-height: 1.45; color: #c9cdd6; }
     .cat { display: inline-block; min-width: 4.8em; margin-right: 8px; color: var(--accent); font: 500 10px/1 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .08em; text-transform: uppercase; }
-    .paypal { display: inline-flex; align-items: center; gap: 10px; padding: 11px 20px; border: 1px solid var(--accent); border-radius: 3px; color: var(--accent); text-decoration: none;
-      font: 700 13px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .14em; text-transform: uppercase; }
-    .paypal svg { color: #ff6b8a; }
-    .paypal:hover { background: rgba(215,255,58,.08); }
     ol { margin: 0 0 8px; padding-left: 22px; }
     li { margin: 0 0 8px; }
     li b { color: var(--ink); }
@@ -261,7 +257,7 @@
           <li><span class="cat">Feature</span> The app fills the window, with no black bars, and scales down to fit a small one.</li>
           <li><span class="cat">Change</span> The window buttons sit in the top bar, which you drag the window by.</li>
           <li><span class="cat">Feature</span> The app checks for a new version and can install it. macOS can still ask you to allow the new version. Saved takes are kept.</li>
-          <li><span class="cat">Feature</span> Support in the top bar opens PayPal.</li>
+          <li><span class="cat">Feature</span> Support is available in the app's top bar.</li>
           <li><span class="cat">Change</span> Export WAV is gone from the top bar. Each take has its own download.</li>
           <li><span class="cat">Change</span> Six takes show at once in two columns, beside a fixed-width waveform.</li>
           <li><span class="cat">Change</span> Clearer sample length, a smaller output meter with a limiter light, and an LFO hint that fits.</li>
@@ -273,15 +269,6 @@
           <li><span class="cat">Fix</span> Export WAV keeps the audio until the Save dialog is done.</li>
         </ul>
       </div>
-    </section>
-
-    <section class="install support" id="support">
-      <h2 class="mono">Support</h2>
-      <p>ADNS SPACE is a <span class="beta">free beta</span>. If you enjoy it, you can support it with any amount you like.</p>
-      <a class="paypal" href="https://paypal.me/AntoniosKolovos" target="_blank" rel="noopener noreferrer">
-        <svg width="15" height="15" viewBox="0 0 12 12" aria-hidden="true"><path d="M6 10.5 1.6 6.3a2.6 2.6 0 0 1 3.7-3.7L6 3.3l.7-.7a2.6 2.6 0 0 1 3.7 3.7z" fill="currentColor"/></svg>
-        Support with PayPal
-      </a>
     </section>
 
     <footer>

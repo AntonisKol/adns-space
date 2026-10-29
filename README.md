@@ -26,10 +26,6 @@ Versions 1.2 and later tell you when a new version is out and can install it: cl
 
 On older versions, download the newest `.dmg` from the link above and drag it into Applications, choosing **Replace**. Your saved takes are kept either way.
 
-## Support
-
-ADNS SPACE is a free beta. If you enjoy it, you can support it with any amount: **[♥ Support with PayPal](https://paypal.me/AntoniosKolovos)**.
-
 ## Troubleshooting
 
 - **"ADNS SPACE is damaged and can't be opened."** The download was probably interrupted. Delete the app and the `.dmg` and download it again.

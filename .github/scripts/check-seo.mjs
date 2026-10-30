@@ -9,7 +9,7 @@ const PAGES = [
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
   { file: 'market-trends/index.html', url: `${SITE}market-trends/`, types: ['WebPage'] },
-  { file: 'contact/index.html', url: `${SITE}contact/`, types: ['ContactPage'] },
+  { file: 'contact/index.html', url: `${SITE}contact/`, types: ['ContactPage'], eyebrow: false },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [
@@ -127,7 +127,12 @@ for (const page of PAGES) {
   const content = html.match(/<main[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';
   const eyebrowAt = content.search(/class="eyebrow"/);
   const before = content.slice(0, Math.max(eyebrowAt, 0));
-  if (eyebrowAt < 0 || eyebrowAt > content.search(/<h1[\s>]/) || /<(img|figure|p|h[1-6])[\s>]/.test(before)) {
+  // Contact has no eyebrow (issue #42): its main starts with the h1, and the CSS keeps the h1 at the same height.
+  if (page.eyebrow === false) {
+    if (eyebrowAt >= 0 || /<(img|figure|p|h[2-6])[\s>]/.test(content.slice(0, Math.max(content.search(/<h1[\s>]/), 0)))) {
+      fail(where, 'main should start with the h1');
+    }
+  } else if (eyebrowAt < 0 || eyebrowAt > content.search(/<h1[\s>]/) || /<(img|figure|p|h[1-6])[\s>]/.test(before)) {
     fail(where, 'main should start with an eyebrow, then the h1');
   }
   const logo = html.match(/<svg class="brand-logo"[\s\S]*?<\/svg>/)?.[0];

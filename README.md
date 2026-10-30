@@ -30,4 +30,4 @@ On older versions, download the newest `.dmg` from the link above and drag it in
 
 - **"ADNS SPACE is damaged and can't be opened."** The download was probably interrupted. Delete the app and the `.dmg` and download it again.
 - **No sound.** Check your Mac's output device and volume, and **VOL** in the app's top bar (next to the level meter), then load a sample and touch the pad.
-- **Something else?** Email [support@adnsaudio.com](mailto:support@adnsaudio.com).
+- **Something else?** Email support[at]adnsaudio.com.

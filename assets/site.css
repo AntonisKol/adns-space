@@ -627,6 +627,100 @@ footer {
 
 footer a { color: var(--ink); }
 
+/* Contact (issue #36): black and white only. A card turns white on hover or focus. */
+.contact-page { --accent: var(--ink); --eyebrow: var(--muted); }
+
+.contact-hero {
+  padding: var(--content-top) 0 64px;
+}
+
+.contact-hero > p {
+  max-width: 560px;
+  color: var(--muted);
+  font-size: 18px;
+}
+
+.contact-cards {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin-top: 40px;
+  border: 1px solid var(--ink);
+}
+
+.contact-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 28px;
+  background: var(--ground);
+  transition: background .2s, color .2s;
+}
+
+.contact-card + .contact-card { border-left: 1px solid var(--ink); }
+
+.contact-card:hover,
+.contact-card:focus-within {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+.contact-label {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 44px;
+  font: 11px var(--mono);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.contact-label span { opacity: .55; }
+
+.contact-card h2 {
+  margin-bottom: 10px;
+  font-size: 22px;
+  letter-spacing: .04em;
+}
+
+.contact-card p {
+  max-width: 420px;
+  opacity: .7;
+}
+
+.contact-address {
+  margin-top: auto;
+  padding-top: 24px;
+  font: clamp(17px, 2.3vw, 24px) var(--mono);
+  letter-spacing: .02em;
+  overflow-wrap: anywhere;
+}
+
+.contact-address span { opacity: .5; }
+
+.contact-copy {
+  align-self: flex-start;
+  margin-top: 16px;
+  padding: 8px 12px;
+  border: 1px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font: 11px var(--mono);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.contact-copy:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 3px;
+}
+
+@media (max-width: 760px) {
+  .contact-cards { grid-template-columns: 1fr; }
+  .contact-card + .contact-card { border-left: 0; border-top: 1px solid var(--ink); }
+  .contact-card { min-height: 0; }
+}
+
 footer.site-footer {
   margin: auto auto 0;
   padding: 18px 0 24px;

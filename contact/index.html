@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>Contact — ADNS Audio</title>
+  <meta name="description" content="Get in touch with ADNS Audio: support for bug reports and technical questions, contact for everything else." />
+  <link rel="canonical" href="https://adnsaudio.com/contact/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="ADNS Audio" />
+  <meta property="og:url" content="https://adnsaudio.com/contact/" />
+  <meta property="og:title" content="Contact — ADNS Audio" />
+  <meta property="og:description" content="Support for bug reports and technical questions, contact for everything else." />
+  <meta property="og:image" content="https://adnsaudio.com/assets/adns-audio-social.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="ADNS Audio: audio software and music discovery projects." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image:alt" content="ADNS Audio: audio software and music discovery projects." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&amp;family=Share+Tech+Mono&amp;display=swap" rel="stylesheet" />
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/assets/site.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact",
+    "description": "Get in touch with ADNS Audio: support for bug reports and technical questions, contact for everything else.",
+    "url": "https://adnsaudio.com/contact/",
+    "image": "https://adnsaudio.com/assets/adns-audio-social.png",
+    "publisher": {
+      "@type": "Organization",
+      "@id": "https://adnsaudio.com/#org",
+      "name": "ADNS Audio",
+      "url": "https://adnsaudio.com/"
+    }
+  }
+  </script>
+</head>
+<body class="contact-page">
+  <header class="wrap mast">
+    <a class="brand" href="/" aria-label="ADNS Audio home">
+      <svg class="brand-logo" viewBox="0 0 240 48" role="img" aria-labelledby="brand-title">
+        <title id="brand-title">ADNS Audio</title>
+        <text x="0" y="35" font-size="31" font-weight="700" letter-spacing="1">ADNS Audio</text>
+        <g>
+          <rect x="197" y="22" width="2.5" height="7" rx="1.25" />
+          <rect x="203" y="18" width="2.5" height="15" rx="1.25" />
+          <rect x="209" y="13" width="2.5" height="25" rx="1.25" />
+          <rect x="215" y="20" width="2.5" height="11" rx="1.25" />
+          <rect x="221" y="15" width="2.5" height="21" rx="1.25" />
+          <rect x="227" y="20" width="2.5" height="11" rx="1.25" />
+          <rect x="233" y="22" width="2.5" height="7" rx="1.25" />
+        </g>
+      </svg>
+    </a>
+    <nav class="nav" aria-label="Main navigation">
+      <a href="/">Home</a>
+      <a href="/space/">ADNS SPACE</a>
+      <a href="/techno-vinyls/">Techno Vinyls</a>
+      <a href="/market-trends/">Market Trends</a>
+      <a class="current" href="/contact/" aria-current="page">Contact</a>
+    </nav>
+  </header>
+
+  <main class="wrap">
+    <section class="contact-hero">
+      <div class="eyebrow">Contact</div>
+      <h1>Get in touch.</h1>
+      <p>Two addresses, so your message lands in the right place.</p>
+
+      <div class="contact-cards">
+        <article class="contact-card">
+          <div class="contact-label"><span>01</span>Support</div>
+          <h2>Bugs &amp; technical questions</h2>
+          <p>Something broken, a crash, or a question about how ADNS SPACE or another project works.</p>
+          <div class="contact-address">support<span>[at]</span>adnsaudio.com</div>
+          <button class="contact-copy" type="button" data-user="support" hidden>Copy address</button>
+        </article>
+        <article class="contact-card">
+          <div class="contact-label"><span>02</span>Contact</div>
+          <h2>Everything else</h2>
+          <p>Collaborations, press, ideas, feedback, or just to say hi.</p>
+          <div class="contact-address">contact<span>[at]</span>adnsaudio.com</div>
+          <button class="contact-copy" type="button" data-user="contact" hidden>Copy address</button>
+        </article>
+      </div>
+    </section>
+  </main>
+  <footer class="wrap site-footer">
+    <span>© Antonios Kolovos. All rights reserved.</span>
+  </footer>
+  <script>
+    // The real address only exists here, put together on click, so it isn't in the page for scrapers (#32).
+    for (const button of document.querySelectorAll('.contact-copy')) {
+      if (!navigator.clipboard) continue;
+      button.hidden = false;
+      button.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText(`${button.dataset.user}${String.fromCharCode(64)}adnsaudio.com`);
+          button.textContent = 'Copied';
+        } catch {
+          button.textContent = 'Copy failed';
+        }
+        setTimeout(() => { button.textContent = 'Copy address'; }, 1600);
+      });
+    }
+  </script>
+</body>
+</html>

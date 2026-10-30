@@ -9,12 +9,13 @@ const PAGES = [
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
   { file: 'market-trends/index.html', url: `${SITE}market-trends/`, types: ['WebPage'] },
+  { file: 'contact/index.html', url: `${SITE}contact/`, types: ['ContactPage'] },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [
   { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
-const NAVIGATION = ['/', '/space/', '/techno-vinyls/', '/market-trends/'];
+const NAVIGATION = ['/', '/space/', '/techno-vinyls/', '/market-trends/', '/contact/'];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
 

@@ -634,6 +634,9 @@ footer a { color: var(--ink); }
   padding: var(--content-top) 0 64px;
 }
 
+/* No eyebrow here, so the h1 takes its line (13px) on top of its own margin and starts where the other pages' h1 does. */
+.contact-hero h1 { margin-top: 27px; }
+
 .contact-cards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

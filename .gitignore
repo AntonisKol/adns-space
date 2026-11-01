@@ -8,3 +8,8 @@
 
 # Folder settings macOS's Finder writes into every folder it opens.
 .DS_Store
+
+# Tailwind's build tools (npm install); only the built assets/site.css is published.
+node_modules/
+# Written by scripts/page-classes.mjs on every build.
+src/page-classes.txt

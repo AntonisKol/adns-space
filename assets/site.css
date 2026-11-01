@@ -742,7 +742,16 @@ footer.site-footer {
   .brand-logo { width: 170px; }
   /* Keep eyebrows on one line on phones, so headings start at the same height. */
   .eyebrow { letter-spacing: .08em; }
-  .nav { gap: 8px 15px; }
+  /* All five links on one line, even on a 320px phone: the text shrinks with the screen and the links share the width. */
+  .nav {
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-self: stretch;
+    gap: 6px;
+    font-size: clamp(9px, 2.9vw, 12px);
+    letter-spacing: .04em;
+    white-space: nowrap;
+  }
   .app-top { align-items: flex-start; flex-direction: column; }
   .app-bottom { flex-direction: column; }
   .release-table { min-width: 680px; }

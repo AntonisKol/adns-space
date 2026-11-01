@@ -3,8 +3,7 @@
   "private": true,
   "description": "Builds assets/site.css for adnsaudio.com from src/tailwind.css.",
   "scripts": {
-    "build:css": "tailwindcss -i src/tailwind.css -o assets/site.css",
-    "watch:css": "tailwindcss -i src/tailwind.css -o assets/site.css --watch"
+    "build:css": "node scripts/page-classes.mjs && tailwindcss -i src/tailwind.css -o assets/site.css --optimize"
   },
   "devDependencies": {
     "@tailwindcss/cli": "4.3.3",

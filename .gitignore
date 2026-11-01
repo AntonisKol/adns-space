@@ -11,3 +11,5 @@
 
 # Tailwind's build tools (npm install); only the built assets/site.css is published.
 node_modules/
+# Written by scripts/page-classes.mjs on every build.
+src/page-classes.txt

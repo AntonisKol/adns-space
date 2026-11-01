@@ -12,6 +12,10 @@
  *   - Build with `npm run build:css` and commit assets/site.css: GitHub Pages serves the
  *     repository as it is, with no build step. The check workflow fails when the committed
  *     file doesn't match this source.
+ *   - Tailwind reads only the class names in the pages' class="…" attributes, which
+ *     scripts/page-classes.mjs collects into src/page-classes.txt before each build. Scanning the
+ *     pages' text would turn words into utilities ("locks ring out" made .ring), so a changelog
+ *     entry from the ADNS SPACE release could change the CSS with nobody there to rebuild it.
  *   - Only Tailwind's theme and utilities are imported, not its base reset (preflight):
  *     the `base` layer below keeps the site's own global basics, so nothing looks different.
  *   - The colours and fonts point at the :root variables (`@theme inline`), so there is one
@@ -19,8 +23,12 @@
  *   - Tailwind's default colours and fonts are cleared, so only the site's tokens exist.
  *   - Layers: base (global basics), components (shared building blocks), utilities. A
  *     utility in the HTML always beats a component, so a page can adjust one in place.
- *   - The pages are scanned for class names; the Techno Vinyls app bundle isn't (it styles
- *     itself, with MUI, in its own repository).
+ *   - Components are for pieces a page repeats (cards, buttons, tags) or whose HTML has no
+ *     classes of its own (the guide's Markdown text); one-off layout is utilities in the HTML.
+ *   - Breakpoints are the theme's, also inside components (`@variant max-lg`), so each width
+ *     has one definition.
+ *   - The build is optimized: Lightning CSS writes the media queries so older Safari reads
+ *     them. It also rounds colours with a fraction of a percent of alpha to 8-bit hex.
  *   - The changelog on /space/ is written by the ADNS SPACE release workflow
  *     (scripts/site-changelog.js in the app's repository): it needs `<div class="notes-scroll">`,
  *     `<h3 class="mono">` and `<span class="cat">` exactly, so those stay components.
@@ -31,9 +39,7 @@
 @import 'tailwindcss/theme.css' layer(theme);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
 
-@source '../**/*.html';
-@source not '../node_modules';
-@source not '../techno-vinyls/app';
+@source './page-classes.txt';
 
 @theme inline {
   --color-*: initial;
@@ -158,8 +164,8 @@
     letter-spacing: .14em;
   }
 
-  @media (max-width: 760px) {
-    :root { --content-top: 55px; }
+  :root {
+    @variant max-lg { --content-top: 55px; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -188,6 +194,12 @@
     padding: 21px 0;
     border-bottom: 1px solid var(--line);
     flex-shrink: 0;
+
+    @variant max-lg {
+      align-items: flex-start;
+      flex-direction: column;
+      gap: 13px;
+    }
   }
 
   .brand {
@@ -203,6 +215,8 @@
     height: auto;
     color: var(--ink);
     font-family: var(--sans);
+
+    @variant max-sm { width: 170px; }
   }
 
   .brand-logo text,
@@ -219,6 +233,19 @@
     font: 12px var(--mono);
     letter-spacing: .07em;
     text-transform: uppercase;
+
+    @variant max-lg { justify-content: flex-start; }
+
+    /* All five links on one line, even on a 320px phone: the text shrinks with the screen and the links share the width. */
+    @variant max-sm {
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-self: stretch;
+      gap: 6px;
+      font-size: clamp(9px, 2.9vw, 12px);
+      letter-spacing: .04em;
+      white-space: nowrap;
+    }
   }
 
   .nav a {
@@ -235,6 +262,9 @@
     font: 11px var(--mono);
     letter-spacing: .16em;
     text-transform: uppercase;
+
+    /* Keep eyebrows on one line on phones, so headings start at the same height. */
+    @variant max-sm { letter-spacing: .08em; }
   }
 
   .mono {
@@ -303,6 +333,8 @@
     background: var(--panel);
     text-decoration: none;
     transition: background .15s, transform .15s;
+
+    @variant max-lg { min-height: 210px; }
   }
 
   .card:hover {
@@ -411,7 +443,108 @@
   .guide th, .guide td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
   .guide tr:last-child td { border-bottom: 0; }
   .guide th { color: var(--accent); font: 400 12px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
-  .guide td:first-child { color: var(--ink); white-space: nowrap; }
+  .guide td:first-child {
+    color: var(--ink);
+    white-space: nowrap;
+
+    @variant max-md { white-space: normal; }
+  }
+  .guide-screenshot { margin: 24px 0; }
+  .guide-screenshot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: 1px solid var(--line);
+    background: #05060b;
+  }
+  .guide-screenshot figcaption {
+    margin-top: 8px;
+    color: var(--muted);
+    font: 10px var(--mono);
+    letter-spacing: .06em;
+  }
+  /* A table's frame, which scrolls sideways on phones. */
+  .guide-table { margin: 0 0 20px; overflow-x: auto; background: var(--panel); border: 1px solid var(--line); }
+
+  /* The product's features as small tags, under the Techno Vinyls heading. */
+  .product-line {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 9px;
+    margin-top: 21px;
+  }
+
+  .product-line span {
+    padding: 5px 8px;
+    border: 1px solid var(--line);
+    color: var(--accent);
+    font: 10px var(--mono);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  /* Contact (issue #36): black and white only. A card turns white on hover or focus. */
+  .contact-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    padding: 28px;
+    background: var(--ground);
+    transition: background .2s, color .2s;
+
+    @variant max-lg { min-height: 0; }
+  }
+
+  .contact-card + .contact-card {
+    border-left: 1px solid var(--ink);
+
+    @variant max-lg { border-left: 0; border-top: 1px solid var(--ink); }
+  }
+
+  .contact-card:hover,
+  .contact-card:focus-within {
+    background: var(--ink);
+    color: var(--ground);
+  }
+
+  .contact-card h2 {
+    margin-bottom: 10px;
+    font-size: 22px;
+    letter-spacing: .04em;
+  }
+
+  .contact-card p {
+    max-width: 420px;
+    opacity: .7;
+  }
+
+  .contact-address {
+    margin-top: auto;
+    padding-top: 24px;
+    font: clamp(17px, 2.3vw, 24px) var(--mono);
+    letter-spacing: .02em;
+    overflow-wrap: anywhere;
+  }
+
+  .contact-address span { opacity: .5; }
+
+  .contact-copy {
+    align-self: flex-start;
+    margin-top: 16px;
+    padding: 8px 12px;
+    border: 1px solid currentColor;
+    background: transparent;
+    color: inherit;
+    font: 11px var(--mono);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .contact-copy:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
 
   .site-footer {
     display: flex;
@@ -426,36 +559,4 @@
   }
 
   .site-footer a { color: var(--ink); }
-
-  @media (max-width: 760px) {
-    .mast {
-      align-items: flex-start;
-      flex-direction: column;
-      gap: 13px;
-    }
-
-    .nav { justify-content: flex-start; }
-
-    .card { min-height: 210px; }
-  }
-
-  @media (max-width: 560px) {
-    .guide td:first-child { white-space: normal; }
-  }
-
-  @media (max-width: 520px) {
-    .brand-logo { width: 170px; }
-    /* Keep eyebrows on one line on phones, so headings start at the same height. */
-    .eyebrow { letter-spacing: .08em; }
-    /* All five links on one line, even on a 320px phone: the text shrinks with the screen and the links share the width. */
-    .nav {
-      flex-wrap: nowrap;
-      justify-content: space-between;
-      align-self: stretch;
-      gap: 6px;
-      font-size: clamp(9px, 2.9vw, 12px);
-      letter-spacing: .04em;
-      white-space: nowrap;
-    }
-  }
 }

@@ -118,8 +118,12 @@ for (const page of PAGES) {
   // built from src/tailwind.css (issue #58), so no page has its own <style> block or style attribute.
   if (!html.includes('<link rel="stylesheet" href="/assets/site.css" />')) fail(where, 'does not use /assets/site.css');
   if (!/<link rel="icon" href="[^"]+"/.test(html)) fail(where, 'no favicon');
-  if (/<style[\s>]/.test(html)) fail(where, 'has a <style> block; style it with Tailwind classes or src/tailwind.css');
-  if (/<[a-z][^>]*\sstyle="/i.test(html.replace(/<svg[\s\S]*?<\/svg>/g, ''))) fail(where, 'has a style attribute; use Tailwind classes');
+  // Each tag outside scripts, read with its quoted values (which may hold a ">"), then blanked values,
+  // so only attribute names are left to match.
+  const tags = html.replace(/<script[\s\S]*?<\/script>/gi, '')
+    .match(/<[a-z][\w-]*(?:\s+[^\s=>/]+(?:\s*=\s*(?:"[^"]*"|'[^']*'|[^\s>]+))?)*\s*\/?>/gi) ?? [];
+  if (tags.some((t) => /^<style\b/i.test(t))) fail(where, 'has a <style> block; style it with Tailwind classes or src/tailwind.css');
+  if (tags.some((t) => /\sstyle\s*=/i.test(t.replace(/"[^"]*"|'[^']*'/g, '""')))) fail(where, 'has a style attribute; use Tailwind classes');
 
   // Content starts at the same point on every page: an eyebrow first in <main>, then the h1.
   const content = html.match(/<main[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';

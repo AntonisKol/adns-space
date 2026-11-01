@@ -114,14 +114,12 @@ for (const page of PAGES) {
     }
   }
 
-  // One look on every page (issue #25): the shared stylesheet, a favicon, and no page-level copy of the shared colours.
+  // One look on every page (issue #25): the shared stylesheet and a favicon. Styles are Tailwind classes
+  // built from src/tailwind.css (issue #58), so no page has its own <style> block or style attribute.
   if (!html.includes('<link rel="stylesheet" href="/assets/site.css" />')) fail(where, 'does not use /assets/site.css');
   if (!/<link rel="icon" href="[^"]+"/.test(html)) fail(where, 'no favicon');
-  for (const [, css] of html.matchAll(/<style>([\s\S]*?)<\/style>/g)) {
-    for (const [, name] of css.matchAll(/--(ground|panel|line|ink|muted|accent):/g)) {
-      fail(where, `redefines --${name}; the shared colours live in assets/site.css`);
-    }
-  }
+  if (/<style[\s>]/.test(html)) fail(where, 'has a <style> block; style it with Tailwind classes or src/tailwind.css');
+  if (/<[a-z][^>]*\sstyle="/i.test(html.replace(/<svg[\s\S]*?<\/svg>/g, ''))) fail(where, 'has a style attribute; use Tailwind classes');
 
   // Content starts at the same point on every page: an eyebrow first in <main>, then the h1.
   const content = html.match(/<main[^>]*>([\s\S]*?)<\/main>/)?.[1] ?? '';

@@ -70,30 +70,31 @@
   </header>
 
   <main class="wrap">
-    <section class="hero">
-      <div class="hero-copy">
+    <section class="grid grid-cols-[minmax(0,1.08fr)_minmax(280px,.92fr)] items-start gap-[clamp(30px,6vw,72px)] pt-(--content-top) pb-16 max-lg:grid-cols-1">
+      <div>
         <div class="eyebrow">Audio software · Music discovery</div>
         <h1>Shape sound.<br />Discover music.</h1>
-        <p>ADNS Audio is building audio instruments and tools for exploring music. Small, considered projects—from first idea through to working software.</p>
+        <p class="max-w-[640px] text-[18px] text-muted">ADNS Audio is building audio instruments and tools for exploring music. Small, considered projects—from first idea through to working software.</p>
       </div>
-      <figure class="hero-art">
+      <figure class="m-0 overflow-hidden border border-line bg-panel max-lg:max-w-[680px]">
         <a href="/space/" aria-label="Explore ADNS SPACE">
           <img
+            class="block h-auto w-full"
             src="/assets/screenshot.jpg"
             alt="ADNS SPACE Mac app: X-Y pad, modulation and effects panels, arpeggiator and step sequencer."
             width="1400"
             height="780"
           />
         </a>
-        <figcaption>ADNS SPACE · standalone instrument for Mac</figcaption>
+        <figcaption class="px-3 py-[9px] font-mono text-[10px] leading-[normal] tracking-[.05em] text-muted">ADNS SPACE · standalone instrument for Mac</figcaption>
       </figure>
     </section>
 
-    <section class="section" id="projects">
-      <div class="section-head">
-        <h2>Projects</h2>
+    <section class="pt-3 pb-[52px]" id="projects">
+      <div class="mb-[18px] flex items-end justify-between gap-5 max-lg:flex-col max-lg:items-start">
+        <h2 class="m-0 text-[clamp(22px,3vw,26px)] leading-[1.15] tracking-[.1em]">Projects</h2>
       </div>
-      <div class="cards">
+      <div class="grid grid-cols-3 gap-[13px] max-lg:grid-cols-1">
         <a class="card space" href="/space/">
           <div class="card-meta"><span>Instrument · macOS</span><span class="pill">Available · beta</span></div>
           <h3>ADNS SPACE</h3>

@@ -5,7 +5,7 @@
   the sequencer and its parameter locks. The technical write-up is docs/ARCHITECTURE.md
   in the source repository.
 -->
-<html lang="en">
+<html class="scroll-pt-6" lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -40,70 +40,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="/assets/site.css" />
-  <style>
-    html { font-synthesis: none; }
-    :root {
-      /* Other colours come from /assets/site.css; --accent is ADNS SPACE lime via .space-page. */
-      --body: #c9cdd6;
-      /* Diagrams use box-drawing characters, which Share Tech Mono doesn't have. */
-      --code: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-    }
-    * { box-sizing: border-box; }
-    html { background: var(--ground); scroll-padding-top: 24px; }
-    body {
-      margin: 0;
-      color: var(--ink);
-      background:
-        radial-gradient(1px 1px at 12% 18%, rgba(255,255,255,.5), transparent 60%),
-        radial-gradient(1px 1px at 78% 8%, rgba(255,255,255,.4), transparent 60%),
-        radial-gradient(1.5px 1.5px at 64% 42%, rgba(255,255,255,.35), transparent 60%),
-        radial-gradient(1px 1px at 30% 70%, rgba(255,255,255,.3), transparent 60%),
-        radial-gradient(1px 1px at 90% 82%, rgba(255,255,255,.35), transparent 60%),
-        radial-gradient(900px 500px at 50% -10%, rgba(215,255,58,.06), transparent 70%),
-        var(--ground);
-      font: 17px/1.6 'Chakra Petch', system-ui, sans-serif;
-    }
-    .mono { font-family: 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
-    main.space-content { width: min(1120px, calc(100% - 36px)); margin: 0 auto; padding: var(--content-top) 0 40px; }
-    /* The eyebrow and h1 sit where they do on every page; the back button stays out of the flow, at the right. */
-    main.space-content { position: relative; }
-    .space-content > header .button { position: absolute; top: var(--content-top); right: 0; }
-    article { max-width: 780px; margin: 0; }
-    article h1 { margin: 14px 0 0; font-size: var(--page-heading-size); letter-spacing: .14em; line-height: 1.1; }
-    article h2 {
-      margin: 0 0 14px; color: var(--accent); font: 400 15px/1.4 'Share Tech Mono', ui-monospace, monospace;
-      letter-spacing: .12em; text-transform: uppercase;
-    }
-    article p, article li, article td { color: var(--body); }
-    article p { margin: 0 0 16px; }
-    article h1 + p { margin-top: 18px; font-size: clamp(18px, 2.4vw, 20px); color: var(--ink); }
-    article strong { color: var(--ink); font-weight: 600; }
-    article a { color: var(--accent); }
-    article ul, article ol { margin: 0 0 16px; padding-left: 22px; }
-    article li { margin: 0 0 8px; }
-    article hr { margin: 44px 0; border: 0; border-top: 1px solid var(--line); }
-    article code { font: .86em var(--code); color: var(--ink); background: rgba(255,255,255,.06); padding: .1em .35em; border-radius: 3px; }
-    article p.files { margin-top: -6px; }
-    article p.files code { background: none; padding: 0; color: var(--muted); }
-    pre.diagram {
-      margin: 0 0 20px; padding: 16px 18px; overflow-x: auto;
-      background: var(--panel); border: 1px solid var(--line);
-    }
-    pre.diagram code { display: block; width: max-content; font: 13px/1.4 var(--code); color: #dfe3ea; background: none; padding: 0; }
-    .table { margin: 0 0 20px; overflow-x: auto; background: var(--panel); border: 1px solid var(--line); }
-    table { border-collapse: collapse; width: 100%; font-size: 15px; line-height: 1.5; }
-    th, td { padding: 10px 14px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--line); }
-    tr:last-child td { border-bottom: 0; }
-    th { color: var(--accent); font: 400 12px 'Share Tech Mono', ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
-    td:first-child { color: var(--ink); white-space: nowrap; }
-
-    @media (max-width: 560px) {
-      .space-content > header .button { min-height: 0; padding: 2px 8px; font-size: 10px; }
-      td:first-child { white-space: normal; }
-    }
-  </style>
 </head>
-<body class="space-page">
+<body class="space-page bg-starfield text-[17px]">
   <header class="wrap mast site-mast">
     <a class="brand" href="/" aria-label="ADNS Audio home">
       <svg class="brand-logo" viewBox="0 0 240 48" role="img" aria-labelledby="brand-title">
@@ -128,19 +66,20 @@
       <a href="/contact/">Contact</a>
     </nav>
   </header>
-  <main class="space-content">
+  <main class="wrap relative pt-(--content-top) pb-10">
     <header>
       <div class="eyebrow">ADNS SPACE · How to use it</div>
-      <a class="button" href="../" aria-label="Back to ADNS SPACE">← ADNS SPACE</a>
+      <!-- The eyebrow and h1 sit where they do on every page; the back button stays out of the flow, at the right. -->
+      <a class="button absolute top-(--content-top) right-0 max-md:min-h-0 max-md:px-2 max-md:py-0.5 max-md:text-[10px]" href="../" aria-label="Back to ADNS SPACE">← ADNS SPACE</a>
     </header>
 
-    <article>
+    <article class="guide">
 <h1 id="how-adns-space-works">How ADNS SPACE works</h1>
 <p>ADNS SPACE is a one-shot sampler. You load a short sample and play it on an X-Y pad. An arpeggiator plays that sample in your key and scale while you drag. The sound runs through ten effects you can put in any order, and a Saturator that always comes last. Six LFOs and two envelopes move the knobs. A sequencer of up to 64 steps plays its own notes, and any step can lock a knob or a switch to its own value. Rec saves what you play as audio and as automation, so a performance can be played again later with a different sample, key or scale.</p>
 <p>It is a Mac app, for macOS 13 or later. There is no server and no account. Everything stays on your computer.</p>
-<figure class="guide-screenshot">
-  <img src="/assets/screenshot.jpg" alt="ADNS SPACE running on Mac, showing the X-Y pad, effects, modulation and sequencer." width="1400" height="780" />
-  <figcaption>ADNS SPACE · standalone sampler for Mac</figcaption>
+<figure class="mx-0 my-6">
+  <img class="block h-auto w-full border border-line bg-[#05060b]" src="/assets/screenshot.jpg" alt="ADNS SPACE running on Mac, showing the X-Y pad, effects, modulation and sequencer." width="1400" height="780" />
+  <figcaption class="mt-2 font-mono text-[10px] leading-[normal] tracking-[.06em] text-muted">ADNS SPACE · standalone sampler for Mac</figcaption>
 </figure>
 <p>This page is a guide to the parts:</p>
 <ol>
@@ -187,7 +126,7 @@
 <h2 id="4-the-effects">4. The effects</h2>
 <p>The effects are strips in the order the sound passes through them: left to right, then the bottom row. Drag a strip by its grip, the dots at the top left, to move it. A bright line shows where it will land, and the sound follows when you let go. With a grip selected, the arrow keys move that strip one place. Esc while dragging puts it back. The order is remembered, and each take keeps the order it started with.</p>
 <p>Each effect has an on/off. Off leaves the dry sound. Its reset button restores its knobs, switches and selectors to their defaults as one Undo step, while keeping its on/off state, step locks, and LFO and envelope maps. The <strong>Saturator</strong> is the bar along the bottom, labelled OUT. It always comes last, after whatever order you give the ten strips.</p>
-<div class="table">
+<div class="mb-5 overflow-x-auto border border-line bg-panel">
 <table>
 <thead><tr><th>Module</th><th>What you turn</th></tr></thead>
 <tbody>

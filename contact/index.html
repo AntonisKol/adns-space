@@ -67,21 +67,23 @@
   </header>
 
   <main class="wrap">
-    <section class="contact-hero">
-      <h1>Get in touch.</h1>
+    <section class="pt-(--content-top) pb-16">
+      <!-- No eyebrow here, so the h1 takes its line (13px) on top of its own margin and starts where the other pages' h1 does. -->
+      <h1 class="mt-[27px]">Get in touch.</h1>
 
-      <div class="contact-cards">
-        <article class="contact-card">
-          <h2>Bugs &amp; technical questions</h2>
-          <p>Something broken, a crash, or a question about how ADNS SPACE or another project works.</p>
-          <div class="contact-address">support<span>[at]</span>adnsaudio.com</div>
-          <button class="contact-copy" type="button" data-user="support" hidden>Copy address</button>
+      <!-- A card turns white on hover or focus. -->
+      <div class="mt-10 grid grid-cols-2 border border-ink max-lg:grid-cols-1">
+        <article class="flex min-h-[300px] flex-col bg-ground p-7 [transition:background_.2s,color_.2s] hover:bg-ink hover:text-ground focus-within:bg-ink focus-within:text-ground max-lg:min-h-0">
+          <h2 class="mb-2.5 text-[22px] tracking-[.04em]">Bugs &amp; technical questions</h2>
+          <p class="max-w-[420px] opacity-70">Something broken, a crash, or a question about how ADNS SPACE or another project works.</p>
+          <div class="mt-auto pt-6 font-mono text-[clamp(17px,2.3vw,24px)] leading-[normal] tracking-[.02em] wrap-anywhere">support<span class="opacity-50">[at]</span>adnsaudio.com</div>
+          <button class="mt-4 cursor-pointer self-start border border-current bg-transparent px-3 py-2 font-mono leading-[normal] text-[11px] tracking-[.12em] text-inherit uppercase focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-current" type="button" data-user="support" hidden>Copy address</button>
         </article>
-        <article class="contact-card">
-          <h2>Everything else</h2>
-          <p>Collaborations, press, ideas, feedback, or just to say hi.</p>
-          <div class="contact-address">contact<span>[at]</span>adnsaudio.com</div>
-          <button class="contact-copy" type="button" data-user="contact" hidden>Copy address</button>
+        <article class="flex min-h-[300px] flex-col bg-ground p-7 [transition:background_.2s,color_.2s] hover:bg-ink hover:text-ground focus-within:bg-ink focus-within:text-ground max-lg:min-h-0 border-l border-ink max-lg:border-t max-lg:border-l-0">
+          <h2 class="mb-2.5 text-[22px] tracking-[.04em]">Everything else</h2>
+          <p class="max-w-[420px] opacity-70">Collaborations, press, ideas, feedback, or just to say hi.</p>
+          <div class="mt-auto pt-6 font-mono text-[clamp(17px,2.3vw,24px)] leading-[normal] tracking-[.02em] wrap-anywhere">contact<span class="opacity-50">[at]</span>adnsaudio.com</div>
+          <button class="mt-4 cursor-pointer self-start border border-current bg-transparent px-3 py-2 font-mono leading-[normal] text-[11px] tracking-[.12em] text-inherit uppercase focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-current" type="button" data-user="contact" hidden>Copy address</button>
         </article>
       </div>
     </section>
@@ -91,7 +93,7 @@
   </footer>
   <script>
     // The real address only exists here, put together on click, so it isn't in the page for scrapers (#32).
-    for (const button of document.querySelectorAll('.contact-copy')) {
+    for (const button of document.querySelectorAll('button[data-user]')) {
       if (!navigator.clipboard) continue;
       button.hidden = false;
       button.addEventListener('click', async () => {

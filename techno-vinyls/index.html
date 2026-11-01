@@ -72,21 +72,21 @@
   </header>
 
   <main class="wrap">
-    <section class="page-hero">
+    <section class="pt-(--content-top) pb-[34px]">
       <div class="eyebrow">Record discovery · Discogs</div>
-      <h1>Techno on vinyl,<br />straight from Discogs.</h1>
-      <p>Browse vinyl releases tagged exclusively as Techno. Search by artist, compare release details and Discogs' current lowest listed price, then open a release on Discogs.</p>
-      <div class="product-line">
-        <span>Discogs catalogue</span>
-        <span>Artist search</span>
-        <span>Discogs lowest price</span>
+      <h1 class="mb-[17px] max-w-[850px]">Techno on vinyl,<br />straight from Discogs.</h1>
+      <p class="max-w-[690px] text-[17px] text-muted">Browse vinyl releases tagged exclusively as Techno. Search by artist, compare release details and Discogs' current lowest listed price, then open a release on Discogs.</p>
+      <div class="mt-[21px] flex flex-wrap gap-[9px]">
+        <span class="border border-line px-2 py-[5px] font-mono leading-[normal] text-[10px] tracking-[.05em] text-accent uppercase">Discogs catalogue</span>
+        <span class="border border-line px-2 py-[5px] font-mono leading-[normal] text-[10px] tracking-[.05em] text-accent uppercase">Artist search</span>
+        <span class="border border-line px-2 py-[5px] font-mono leading-[normal] text-[10px] tracking-[.05em] text-accent uppercase">Discogs lowest price</span>
       </div>
     </section>
 
     <!-- The releases, rendered by the Techno Vinyls app (AntonisKol/techno-vinyls). -->
-    <section class="vinyl-app" aria-label="Techno vinyl releases">
+    <section class="mt-2 mb-[54px] min-h-[60vh]" aria-label="Techno vinyl releases">
       <div id="techno-vinyls"></div>
-      <noscript><p class="app-note">Turn on JavaScript to browse the releases.</p></noscript>
+      <noscript><p class="text-muted">Turn on JavaScript to browse the releases.</p></noscript>
     </section>
   </main>
   <footer class="wrap site-footer">

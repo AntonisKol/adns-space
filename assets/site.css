@@ -766,6 +766,10 @@
     margin-bottom: var(--spacing);
   }
 
+  .mb-\[3px\] {
+    margin-bottom: 3px;
+  }
+
   .mb-\[17px\] {
     margin-bottom: 17px;
   }
@@ -804,6 +808,10 @@
 
   .w-full {
     width: 100%;
+  }
+
+  .max-w-\[620px\] {
+    max-width: 620px;
   }
 
   .max-w-\[640px\] {
@@ -882,6 +890,10 @@
     gap: calc(var(--spacing) * 3.5);
   }
 
+  .gap-4 {
+    gap: calc(var(--spacing) * 4);
+  }
+
   .gap-5 {
     gap: calc(var(--spacing) * 5);
   }
@@ -916,12 +928,25 @@
     border-top-width: 1px;
   }
 
+  .border-l-\[3px\] {
+    border-left-style: var(--tw-border-style);
+    border-left-width: 3px;
+  }
+
   .border-ink {
     border-color: var(--ink);
   }
 
   .border-line {
     border-color: var(--line);
+  }
+
+  .border-trends-line {
+    border-color: var(--trends-line);
+  }
+
+  .border-l-accent {
+    border-left-color: var(--accent);
   }
 
   .bg-panel {
@@ -932,12 +957,20 @@
     padding-inline: calc(var(--spacing) * 3);
   }
 
+  .px-5 {
+    padding-inline: calc(var(--spacing) * 5);
+  }
+
   .px-6 {
     padding-inline: calc(var(--spacing) * 6);
   }
 
   .py-\[9px\] {
     padding-block: 9px;
+  }
+
+  .py-\[18px\] {
+    padding-block: 18px;
   }
 
   .pt-\(--content-top\) {
@@ -988,6 +1021,10 @@
     font-size: 10px;
   }
 
+  .text-\[12px\] {
+    font-size: 12px;
+  }
+
   .text-\[14px\] {
     font-size: 14px;
   }
@@ -1006,6 +1043,11 @@
 
   .text-\[clamp\(22px\,3vw\,26px\)\] {
     font-size: clamp(22px, 3vw, 26px);
+  }
+
+  .leading-\[1\.6\] {
+    --tw-leading: 1.6;
+    line-height: 1.6;
   }
 
   .leading-\[1\.7\] {
@@ -1038,6 +1080,11 @@
     letter-spacing: .05em;
   }
 
+  .tracking-\[\.08em\] {
+    --tw-tracking: .08em;
+    letter-spacing: .08em;
+  }
+
   .text-accent {
     color: var(--accent);
   }
@@ -1050,9 +1097,17 @@
     color: var(--muted);
   }
 
+  .uppercase {
+    text-transform: uppercase;
+  }
+
   .shadow-\[0_30px_80px_rgba\(0\,0\,0\,\.6\)\] {
     --tw-shadow: 0 30px 80px var(--tw-shadow-color, #0009);
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
+  }
+
+  .\[background\:radial-gradient\(ellipse_at_0_50\%\,rgb\(177_155_221\/9\%\)\,transparent_75\%\)\,var\(--panel\)\] {
+    background: radial-gradient(ellipse at 0 50%,#b19bdd17,transparent 75%),var(--panel);
   }
 
   .bg-starfield {

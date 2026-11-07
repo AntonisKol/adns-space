@@ -58,6 +58,12 @@ const meta = (html, attr, name) =>
   tag(html, new RegExp(`<meta ${attr}="${name.replace(/[:.]/g, '\\$&')}" content="([^"]*)"`));
 
 const logos = new Set();
+const orgLogos = new Set();
+// Width and height of a PNG, read from its header.
+const pngSize = (file) => {
+  const b = readFileSync(file);
+  return b.toString('ascii', 1, 4) === 'PNG' ? [b.readUInt32BE(16), b.readUInt32BE(20)] : null;
+};
 for (const page of PAGES) {
   const html = readFileSync(page.file, 'utf8');
   const where = page.file;
@@ -87,6 +93,12 @@ for (const page of PAGES) {
   for (const item of items) {
     if (item['@context'] !== 'https://schema.org') fail(where, `${item['@type']} needs @context https://schema.org`);
     for (const key of ['image', 'screenshot', 'logo']) if (item[key]) onSite(where, `${item['@type']} ${key}`, item[key]);
+    // Google's logo rules: a raster image of at least 112 x 112, and one logo for the publisher everywhere (issue #70).
+    if (item['@type'] === 'Organization') {
+      orgLogos.add(item.logo);
+      const size = item.logo?.endsWith('.png') && existsSync(item.logo.slice(SITE.length)) ? pngSize(item.logo.slice(SITE.length)) : null;
+      if (!size || size[0] < 112 || size[1] < 112) fail(where, 'the Organization logo should be a PNG of at least 112 x 112');
+    }
     const main = item['@type'] === 'SoftwareApplication' || item['@type'] === 'TechArticle';
     if (main && item.description !== description) fail(where, `${item['@type']} description should match the meta description`);
   }
@@ -155,6 +167,23 @@ for (const app of APPS) {
   if (!html.includes(app.container)) fail(app.page, `no ${app.container} for the app`);
   const block = html.match(/<!-- techno-vinyls:app -->([\s\S]*?)<!-- \/techno-vinyls:app -->/)?.[1] ?? '';
   if (!block.includes(`src="${app.files}`)) fail(app.page, `does not load the app from ${app.files}: run npm run publish:site in the app repo`);
+}
+
+if (orgLogos.size > 1) fail('structured data', `the Organization logo differs between pages: ${[...orgLogos].join(', ')}`);
+
+// Google shows the homepage's favicon beside every result (issue #70): a square PNG whose size is a
+// multiple of 48 px, plus /favicon.ico, which crawlers ask for on their own.
+{
+  const html = readFileSync('index.html', 'utf8');
+  const icons = [...html.matchAll(/<link rel="icon" href="([^"]+)" sizes="(\d+)x(\d+)" type="image\/png" \/>/g)];
+  if (!icons.length) fail('index.html', 'no PNG favicon with sizes for Google');
+  for (const [, href, w, h] of icons) {
+    const size = existsSync(href.slice(1)) ? pngSize(href.slice(1)) : null;
+    if (w !== h || Number(w) % 48) fail('index.html', `favicon ${href} should be square and a multiple of 48 px`);
+    else if (!size || size[0] !== Number(w) || size[1] !== Number(h)) fail('index.html', `favicon ${href} is not ${w} x ${h}`);
+  }
+  if (/<link rel="icon"[^>]*\.svg"/.test(html)) fail('index.html', 'an SVG favicon would win over the logo PNGs');
+  if (!existsSync('favicon.ico')) fail('favicon.ico', 'missing');
 }
 
 if (readFileSync('CNAME', 'utf8').trim() !== new URL(SITE).hostname) fail('CNAME', `should be ${new URL(SITE).hostname}`);

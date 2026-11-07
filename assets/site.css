@@ -28,6 +28,7 @@
   :root, :host {
     --spacing: .25rem;
     --font-weight-medium: 500;
+    --font-weight-semibold: 600;
   }
 }
 
@@ -766,6 +767,10 @@
     margin-bottom: var(--spacing);
   }
 
+  .mb-3 {
+    margin-bottom: calc(var(--spacing) * 3);
+  }
+
   .mb-\[3px\] {
     margin-bottom: 3px;
   }
@@ -844,6 +849,10 @@
 
   .scroll-pt-6 {
     scroll-padding-top: calc(var(--spacing) * 6);
+  }
+
+  .list-disc {
+    list-style-type: disc;
   }
 
   .grid-cols-2 {
@@ -1013,6 +1022,10 @@
     padding-bottom: 52px;
   }
 
+  .pl-6 {
+    padding-left: calc(var(--spacing) * 6);
+  }
+
   .font-mono {
     font-family: var(--mono);
   }
@@ -1035,6 +1048,10 @@
 
   .text-\[18px\] {
     font-size: 18px;
+  }
+
+  .text-\[22px\] {
+    font-size: 22px;
   }
 
   .text-\[clamp\(18px\,2\.4vw\,21px\)\] {
@@ -1070,6 +1087,11 @@
     font-weight: var(--font-weight-medium);
   }
 
+  .font-semibold {
+    --tw-font-weight: var(--font-weight-semibold);
+    font-weight: var(--font-weight-semibold);
+  }
+
   .tracking-\[\.1em\] {
     --tw-tracking: .1em;
     letter-spacing: .1em;
@@ -1091,6 +1113,10 @@
 
   .text-beta {
     color: var(--beta);
+  }
+
+  .text-ink {
+    color: var(--ink);
   }
 
   .text-muted {

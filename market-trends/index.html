@@ -5,27 +5,28 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="color-scheme" content="dark" />
   <title>Catalogue / Market Trends — ADNS Audio</title>
-  <meta name="description" content="Catalogue / Market Trends is an upcoming ADNS Audio project exploring music catalogues and market research." />
+  <meta name="description" content="Ask about prices and demand for vinyl on the techno labels ADNS Audio tracks, answered from fresh Discogs marketplace data." />
   <link rel="canonical" href="https://adnsaudio.com/market-trends/" />
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="ADNS Audio" />
   <meta property="og:url" content="https://adnsaudio.com/market-trends/" />
   <meta property="og:title" content="Catalogue / Market Trends — ADNS Audio" />
-  <meta property="og:description" content="An upcoming ADNS Audio project exploring music catalogues and market research." />
+  <meta property="og:description" content="Ask about vinyl prices and demand on the labels ADNS Audio tracks." />
   <meta property="og:image" content="https://adnsaudio.com/assets/market-trends-social.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Catalogue / Market Trends, an upcoming ADNS Audio project." />
+  <meta property="og:image:alt" content="Catalogue / Market Trends by ADNS Audio." />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:image:alt" content="Catalogue / Market Trends, an upcoming ADNS Audio project." />
+  <meta name="twitter:image:alt" content="Catalogue / Market Trends by ADNS Audio." />
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="/assets/site.css" />
+  <link rel="stylesheet" href="ask.css" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "WebPage",
     "name": "Catalogue / Market Trends",
-    "description": "Catalogue / Market Trends is an upcoming ADNS Audio project exploring music catalogues and market research.",
+    "description": "Ask about prices and demand for vinyl on the techno labels ADNS Audio tracks, answered from fresh Discogs marketplace data.",
     "url": "https://adnsaudio.com/market-trends/",
     "image": "https://adnsaudio.com/assets/market-trends-social.png",
     "publisher": {
@@ -67,14 +68,14 @@
     <section class="max-w-[860px] pt-(--content-top) pb-16">
       <div class="eyebrow">Catalogue research</div>
       <h1 class="max-w-[760px]">Catalogue /<br />Market Trends</h1>
-      <p class="max-w-[660px] text-[18px] text-muted">A new project is taking shape around music catalogues and market research.</p>
-      <div class="flex max-w-[620px] items-center gap-4 border border-l-[3px] border-trends-line border-l-accent px-5 py-[18px] font-mono text-[12px] leading-[1.6] text-muted [background:radial-gradient(ellipse_at_0_50%,rgb(177_155_221/9%),transparent_75%),var(--panel)]" role="status">
-        <span><strong class="mb-[3px] block text-[14px] tracking-[.08em] text-accent uppercase">Coming soon</strong>This project is in development.</span>
-      </div>
+      <p class="max-w-[660px] text-[18px] text-muted">Ask about prices and demand for vinyl on the labels this site tracks.</p>
+      <div class="mt-ask" data-api="https://api.adnsaudio.com" data-turnstile-sitekey="0x4AAAAAAFxs4M9uCOweaDD-"></div>
     </section>
   </main>
   <footer class="wrap site-footer">
     <span>© Antonios Kolovos. All rights reserved. · <a href="/privacy/">Privacy</a></span>
   </footer>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+  <script type="module" src="ask.js"></script>
 </body>
 </html>

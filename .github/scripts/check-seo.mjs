@@ -10,6 +10,7 @@ const PAGES = [
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
   { file: 'market-trends/index.html', url: `${SITE}market-trends/`, types: ['WebPage'] },
   { file: 'contact/index.html', url: `${SITE}contact/`, types: ['ContactPage'], eyebrow: false },
+  { file: 'privacy/index.html', url: `${SITE}privacy/`, types: ['WebPage'] },
 ];
 // Old or placeholder addresses that forward to a page (issue #178).
 const FORWARDS = [

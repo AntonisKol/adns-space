@@ -71,3 +71,35 @@ On older versions, download the newest `.dmg` from the link above and drag it in
 - **"ADNS SPACE is damaged and can't be opened."** The download was probably interrupted. Delete the app and the `.dmg` and download it again.
 - **No sound.** Check your Mac's output device and volume, and **VOL** in the app's top bar (next to the level meter), then load a sample and touch the pad.
 - **Something else?** Email support[at]adnsaudio.com.
+
+## Market Trends
+
+Ask in plain English about the vinyl market for techno labels: what records cost, how many copies are for sale, and how many people want and own them. **[Open Market Trends](https://adnsaudio.com/market-trends/)**.
+
+### Use it
+
+- Type a question, for example "Which Ostgut Ton records are the most wanted?" or "Compare Mord and Sublunar prices". The answer comes with a table, **Show the data** opens the rows it is based on, and each table has a copy button.
+- Ask 3 questions a day without an account, or up to 50 with one: sign up with an email address and a password, and confirm the address from the email you get.
+- The labels it covers are listed above the question box. **Missing a label?** Signed in, you can request it and follow it under the box: waiting for review, then added or rejected with a reason. You get an email with the decision.
+
+### What's behind it
+
+- Every night, a Python pipeline records each tracked label's vinyl releases from Discogs: that day's lowest price and copies for sale, and want, have and ratings once a week. New techno labels are added each night, the most collected first, while the nightly update still finishes in time.
+- Claude picks one of five read-only query tools for each question, the application runs it on the database, and Claude writes the answer from the rows.
+- Code, architecture and a demo video: [music-catalogue-market-trends-wip](https://github.com/AntonisKol/music-catalogue-market-trends-wip).
+
+## Techno Vinyls
+
+Browse the newest vinyl releases that Discogs tags as Techno and nothing else. **[Open Techno Vinyls](https://adnsaudio.com/techno-vinyls/)**.
+
+### Use it
+
+- The list starts with the newest releases, twelve to a page.
+- Search by artist to see their techno vinyl releases.
+- Each release shows its artwork, catalogue number and Discogs' current lowest listed price, and opens on Discogs.
+- Releases that also carry another style, such as Techno and House, are left out.
+
+### What's behind it
+
+- Each night at 03:30 UTC, an index of every matching release among Discogs' newest 10,000 results is built with its full release date, so the list is in true date order. Releases added to Discogs during the day appear the next morning; prices are always live.
+- Code: [techno-vinyls](https://github.com/AntonisKol/techno-vinyls).

@@ -332,6 +332,78 @@
     color: var(--ink);
   }
 
+  /* The menu button on narrow screens (issue #73). nav.js shows it and adds .has-menu to the masthead;
+     without JavaScript the button stays hidden and the links show as above. From lg up (a 13" Mac,
+     even in a half-width window) the navbar stays and the button is hidden. */
+  .menu-toggle {
+    display: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    margin: -10px -10px -10px 0;
+    padding: 0;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--ink);
+    cursor: pointer;
+
+    @variant max-lg { display: inline-grid; }
+
+    &[hidden] { display: none; }
+
+    &:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
+
+    svg {
+      grid-area: 1 / 1;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
+
+    .menu-icon-close { visibility: hidden; }
+  }
+
+  .mast.menu-open .menu-toggle {
+    .menu-icon-open { visibility: hidden; }
+    .menu-icon-close { visibility: visible; }
+  }
+
+  .mast.has-menu {
+    @variant max-lg {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0;
+    }
+
+    .nav {
+      @variant max-lg {
+        display: none;
+        flex: 1 0 100%;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        gap: 0;
+        margin-top: 16px;
+        font-size: 14px;
+        letter-spacing: .07em;
+        white-space: normal;
+      }
+    }
+
+    .nav a {
+      @variant max-lg {
+        padding: 13px 0;
+        border-top: 1px solid var(--line);
+      }
+    }
+  }
+
+  .mast.has-menu.menu-open .nav {
+    @variant max-lg { display: flex; }
+  }
+
   .eyebrow {
     color: var(--eyebrow);
     font: 11px var(--mono);

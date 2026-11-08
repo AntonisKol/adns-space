@@ -232,6 +232,79 @@
     color: var(--ink);
   }
 
+  .menu-toggle {
+    width: 44px;
+    height: 44px;
+    color: var(--ink);
+    cursor: pointer;
+    background: none;
+    border: 0;
+    border-radius: 8px;
+    place-items: center;
+    margin: -10px -10px -10px 0;
+    padding: 0;
+    display: none;
+  }
+
+  @media not all and (min-width: 761px) {
+    .menu-toggle {
+      display: inline-grid;
+    }
+  }
+
+  .menu-toggle[hidden] {
+    display: none;
+  }
+
+  .menu-toggle:focus-visible {
+    outline: 2px solid var(--ink);
+    outline-offset: -4px;
+  }
+
+  .menu-toggle svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2px;
+    stroke-linecap: round;
+    grid-area: 1 / 1;
+  }
+
+  .menu-toggle .menu-icon-close, .mast.menu-open .menu-toggle .menu-icon-open {
+    visibility: hidden;
+  }
+
+  .mast.menu-open .menu-toggle .menu-icon-close {
+    visibility: visible;
+  }
+
+  @media not all and (min-width: 761px) {
+    .mast.has-menu {
+      flex-flow: wrap;
+      align-items: center;
+      gap: 0;
+    }
+
+    .mast.has-menu .nav {
+      letter-spacing: .07em;
+      white-space: normal;
+      flex-flow: column;
+      flex: 1 0 100%;
+      gap: 0;
+      margin-top: 16px;
+      font-size: 14px;
+      display: none;
+    }
+
+    .mast.has-menu .nav a {
+      border-top: 1px solid var(--line);
+      padding: 13px 0;
+    }
+
+    .mast.has-menu.menu-open .nav {
+      display: flex;
+    }
+  }
+
   .eyebrow {
     color: var(--eyebrow);
     font: 11px var(--mono);

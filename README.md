@@ -38,17 +38,6 @@ The apps publish their own parts:
 - **Techno Vinyls:** its CI copies each new build into `techno-vinyls/` after its tests pass, and a nightly job at 03:30 UTC refreshes `techno-vinyls/data/releases.json`. Both push with a deploy key that can write to this repository only.
 - **ADNS SPACE:** the release workflow in the app's source repository signs and notarizes the app, publishes it as a [release of this repository](https://github.com/AntonisKol/adns-space/releases), and adds the version's changelog to the download page. Installed copies look for updates in these releases.
 
-## Work on it locally
-
-```bash
-npm ci                                  # Tailwind's build tools
-npm run build:css                       # rebuild assets/site.css after changing pages or src/tailwind.css
-node .github/scripts/check-seo.mjs      # the same page checks as the pull request
-python3 -m http.server 8000             # then open http://localhost:8000
-```
-
-Commit `assets/site.css` together with the pages that need it. Never commit an `.env` file or anything secret: every file here is published.
-
 ## ADNS SPACE for Mac
 
 ADNS SPACE is a one-shot sampler you play on an X-Y pad. Load a short sound, then click and drag on the pad. Left to right picks the note in your chosen key and scale, bottom to top picks the speed, and the built-in arpeggiator plays your sound in time.

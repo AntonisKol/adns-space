@@ -2,7 +2,9 @@
 
 The website of ADNS Audio: audio software and music discovery tools for techno. **Live at [adnsaudio.com](https://adnsaudio.com/).**
 
-Everything in this repository is the site itself. GitHub Pages serves the `main` branch at adnsaudio.com, so each file here is a page or an asset people can open. The repository was called `adns-space` until November 2026; old links to it still lead here.
+Everything in this repository is the site itself. GitHub Pages serves the `main` branch at adnsaudio.com, so each file here is a page or an asset people can open.
+
+**Why it's called `adns-space`.** The repository started as ADNS SPACE's download page, and it still holds the app's releases. Installed copies of ADNS SPACE look for updates at `AntonisKol/adns-space` and only accept downloads from `github.com/AntonisKol/adns-space/releases/download/`. Renamed, the repository would hand out links under the new name, and installed copies would silently stop finding updates. So the name stays.
 
 ## What's on the site
 
@@ -34,7 +36,7 @@ The apps publish their own parts:
 
 - **Market Trends:** `deploy/deploy.sh page` in its repository opens a pull request here that copies only `ask.js` and `ask.css` into `market-trends/`. Merging it publishes the new question box.
 - **Techno Vinyls:** its CI copies each new build into `techno-vinyls/` after its tests pass, and a nightly job at 03:30 UTC refreshes `techno-vinyls/data/releases.json`. Both push with a deploy key that can write to this repository only.
-- **ADNS SPACE:** the release workflow in the app's source repository signs and notarizes the app, publishes it as a [release of this repository](https://github.com/AntonisKol/adnsaudio.com/releases), and adds the version's changelog to the download page. Installed copies look for updates in these releases.
+- **ADNS SPACE:** the release workflow in the app's source repository signs and notarizes the app, publishes it as a [release of this repository](https://github.com/AntonisKol/adns-space/releases), and adds the version's changelog to the download page. Installed copies look for updates in these releases.
 
 ## Work on it locally
 

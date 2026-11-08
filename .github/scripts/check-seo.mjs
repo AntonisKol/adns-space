@@ -16,7 +16,7 @@ const PAGES = [
 const FORWARDS = [
   { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
-const NAVIGATION = ['/', '/space/', '/techno-vinyls/', '/market-trends/', '/contact/'];
+const NAVIGATION = ['/', '/space/', '/market-trends/', '/techno-vinyls/', '/contact/'];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
 

@@ -127,6 +127,14 @@ for (const page of PAGES) {
     }
   }
 
+  // The menu button for narrow screens (issue #73): it opens the nav, which nav.js wires up.
+  const mast = html.match(/<header class="wrap mast[^"]*">([\s\S]*?)<\/header>/)?.[1] ?? '';
+  if (!/<button class="menu-toggle" type="button" aria-controls="site-nav" aria-expanded="false"[^>]* hidden>/.test(mast)) {
+    fail(where, 'no hidden menu button for narrow screens in the masthead');
+  }
+  if (!mast.includes('<nav class="nav" id="site-nav"')) fail(where, 'the nav needs id="site-nav" for the menu button');
+  if (!html.includes('<script src="/assets/nav.js" defer></script>')) fail(where, 'does not load /assets/nav.js');
+
   // One look on every page (issue #25): the shared stylesheet and a favicon. Styles are Tailwind classes
   // built from src/tailwind.css (issue #58), so no page has its own <style> block or style attribute.
   if (!html.includes('<link rel="stylesheet" href="/assets/site.css" />')) fail(where, 'does not use /assets/site.css');

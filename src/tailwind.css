@@ -133,6 +133,7 @@
   --color-trends: var(--trends);
   --color-trends-soft: var(--trends-soft);
   --color-trends-line: var(--trends-line);
+  --color-map-soft: var(--map-soft);
   --font-*: initial;
   --font-sans: var(--sans);
   --font-mono: var(--mono);
@@ -182,6 +183,8 @@
     --trends: #392850;
     --trends-soft: #b19bdd;
     --trends-line: #403553;
+    /* ADNS Sample Map's red, softened from the app's playhead dots. */
+    --map-soft: #ff7a70;
     /* Each product page sets its own accent; Home stays neutral. */
     --accent: var(--ink);
     --eyebrow: var(--muted);
@@ -224,6 +227,7 @@
   .space-page { --accent: var(--space); --eyebrow: var(--space); }
   .vinyl-page { --accent: var(--vinyl-soft); --eyebrow: var(--vinyl-soft); }
   .market-page { --accent: var(--trends-soft); --eyebrow: var(--trends-soft); }
+  .map-page { --accent: var(--map-soft); --eyebrow: var(--map-soft); }
   /* Contact (issue #36): black and white only. */
   .contact-page { --accent: var(--ink); --eyebrow: var(--muted); }
 
@@ -492,6 +496,7 @@
   .card.space { --card-accent: var(--space); }
   .card.vinyl { --card-accent: var(--vinyl-soft); }
   .card.trends { --card-accent: var(--trends-soft); }
+  .card.map { --card-accent: var(--map-soft); }
 
   .card-meta {
     display: flex;

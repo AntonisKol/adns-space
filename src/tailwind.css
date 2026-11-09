@@ -183,8 +183,8 @@
     --trends: #392850;
     --trends-soft: #b19bdd;
     --trends-line: #403553;
-    /* ADNS Sample Map's red, softened from the app's playhead dots. */
-    --map-soft: #ff7a70;
+    /* ADNS Sample Map's light pink. */
+    --map-soft: #f5b8d2;
     /* Each product page sets its own accent; Home stays neutral. */
     --accent: var(--ink);
     --eyebrow: var(--muted);

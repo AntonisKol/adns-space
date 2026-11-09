@@ -9,6 +9,7 @@ const PAGES = [
   { file: 'space/how-it-works/index.html', url: `${SITE}space/how-it-works/`, types: ['TechArticle'] },
   { file: 'techno-vinyls/index.html', url: `${SITE}techno-vinyls/`, types: ['WebPage'] },
   { file: 'market-trends/index.html', url: `${SITE}market-trends/`, types: ['WebPage'] },
+  { file: 'sample-map/index.html', url: `${SITE}sample-map/`, types: ['WebPage'] },
   { file: 'contact/index.html', url: `${SITE}contact/`, types: ['ContactPage'], eyebrow: false },
   { file: 'privacy/index.html', url: `${SITE}privacy/`, types: ['WebPage'] },
 ];
@@ -16,7 +17,7 @@ const PAGES = [
 const FORWARDS = [
   { file: 'code/index.html', to: `${SITE}space/how-it-works/`, types: [] },
 ];
-const NAVIGATION = ['/', '/space/', '/market-trends/', '/techno-vinyls/', '/contact/'];
+const NAVIGATION = ['/', '/space/', '/market-trends/', '/techno-vinyls/', '/sample-map/', '/contact/'];
 // Wording the site must never use (see issue #166).
 const BANNED = [/\bVST\b/i, /\bAU\b/, /Audio Unit/i];
 

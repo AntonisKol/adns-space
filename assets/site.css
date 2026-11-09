@@ -49,6 +49,7 @@
     --trends: #392850;
     --trends-soft: #b19bdd;
     --trends-line: #403553;
+    --map-soft: #ff7a70;
     --accent: var(--ink);
     --eyebrow: var(--muted);
     --content-top: clamp(56px, 9vw, 104px);
@@ -104,6 +105,11 @@
   .market-page {
     --accent: var(--trends-soft);
     --eyebrow: var(--trends-soft);
+  }
+
+  .map-page {
+    --accent: var(--map-soft);
+    --eyebrow: var(--map-soft);
   }
 
   .contact-page {
@@ -407,6 +413,10 @@
 
   .card.trends {
     --card-accent: var(--trends-soft);
+  }
+
+  .card.map {
+    --card-accent: var(--map-soft);
   }
 
   .card-meta {
@@ -844,6 +854,10 @@
     margin-bottom: calc(var(--spacing) * 3);
   }
 
+  .mb-16 {
+    margin-bottom: calc(var(--spacing) * 16);
+  }
+
   .mb-\[17px\] {
     margin-bottom: 17px;
   }
@@ -1060,6 +1074,10 @@
 
   .pb-\[52px\] {
     padding-bottom: 52px;
+  }
+
+  .pl-5 {
+    padding-left: calc(var(--spacing) * 5);
   }
 
   .pl-6 {
